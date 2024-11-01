@@ -1,11 +1,11 @@
 'use client';
 
 import RecipeItem from "./recipe_item";
-import React, { Suspense, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { get_list } from "@/app/repository/repository";
 
-// 192x172
-// 12x10.75
+// 192x172 px
+// 12x10.75 rem 
 function RecipePlaceHolderItem () {
     return <div className="shadow-sm rounded-md overflow-hidden w-48 p-1.5 bg-white mb-1 h-44"> 
     <div className="w-full h-24 rounded-md object-cover bg-slate-100"> </div>
@@ -21,6 +21,10 @@ function RecipesPlaceHolder () {
     }
 
     return (<div className="flex *:flex-shrink-0 overflow-x-hidden gap-3"> {elems} </div>);
+}
+
+function RecipeLoadFailure () {
+    return (<div> Something went wrong <br/> Please reload the page </div>);
 }
 
 export default function RecipeSection({children, title, fetch}: {children?: React.ReactNode, title: string, fetch: string}) {
@@ -46,9 +50,9 @@ export default function RecipeSection({children, title, fetch}: {children?: Reac
     }
 
     return (
-        <div className="px-12">
+        <div className="sm:px-12 px-3">
             <div className="text-3xl font-semibold mb-2">{title}</div>
-            {state === "loading" ? <RecipesPlaceHolder/> : 
+            {state === "loading" ? <RecipesPlaceHolder/> : state === "failed" ? <RecipeLoadFailure/> :
                 <div className="flex *:flex-shrink-0 overflow-x-auto gap-3 no-scrollbar">
                     {elems}
                 </div>
