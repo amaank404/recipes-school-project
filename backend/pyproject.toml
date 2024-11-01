@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "recipes-backend"
+package-mode = false
+description = ""
+authors = ["None"]
+license = "GPL-3.0-only"
+packages = [{ include = "recipes_backend_server" }]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+Flask = "^3.0.3"
+PyMySQL = "^1.1.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+
+[tool.poetry.scripts]
+recipes-backend-server = "recipes_backend_server.app:run_app"
