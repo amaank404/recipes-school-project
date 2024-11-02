@@ -1,6 +1,6 @@
 export class DummyRepository {
     async get_list(cagegory: string): Promise<Recipe[]> {
-        // await new Promise(resolve => setTimeout(resolve, 5000));
+        await new Promise(resolve => setTimeout(resolve, 2000));
         switch (cagegory) {
             case "popular":
                 return [
@@ -70,7 +70,7 @@ export class DummyRepository {
     }
 
     async get_recipe(id: string): Promise<RecipeData> {
-        // await new Promise(resolve => setTimeout(resolve, 5000));
+        await new Promise(resolve => setTimeout(resolve, 2000));
         switch (id) {
             case "c122":
                 return {
