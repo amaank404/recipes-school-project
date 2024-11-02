@@ -2,6 +2,11 @@ import {playfair_display, plus_jakarta_sans} from "@/app/ui/fonts";
 import './banner_style.css';
 import NavBar from "@/app/ui/navbar";
 import RecipeSection from "@/app/ui/recipe_section";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Recipes.com",
+};
 
 export default function HomePage () {
     return (
@@ -16,6 +21,7 @@ export default function HomePage () {
             <div className="py-6 flex flex-col gap-5">
                 <RecipeSection title="Popular" fetch="popular" />
                 <RecipeSection title="Easy" fetch="easy" />
+                <RecipeSection title="Not Found" fetch="not found" />
             </div>
         </div>
     )

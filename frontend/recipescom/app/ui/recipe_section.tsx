@@ -3,6 +3,7 @@
 import RecipeItem from "./recipe_item";
 import React, { useEffect, useState } from "react";
 import { get_list } from "@/app/repository/repository";
+import clsx from "clsx";
 
 // 192x172 px
 // 12x10.75 rem 
@@ -23,20 +24,28 @@ function RecipesPlaceHolder () {
     return (<div className="flex *:flex-shrink-0 overflow-x-hidden gap-3"> {elems} </div>);
 }
 
-function RecipeLoadFailure () {
-    return (<div> Something went wrong <br/> Please reload the page </div>);
+function RecipeLoadFailure ({error_data}: {error_data?: string}) {
+    return (
+    <div className="w-full bg-red-100 text-red-600 rounded-md text-center h-44 align-middle flex flex-col justify-center">
+        <div className="material-symbols-rounded text-2xl">error</div>
+        <div>Something went wrong <br/> Please reload the page </div>
+        {error_data ? <div className="font-mono">Error: {error_data}</div>: <></>}
+    </div>
+    );
 }
 
-export default function RecipeSection({children, title, fetch}: {children?: React.ReactNode, title: string, fetch: string}) {
+export default function RecipeSection({title, fetch}: {title: string, fetch: string}) {
     const [state, setState] = useState("loading");
     const [data, setData] = useState<Recipe[]>([]);
+    const [error, setError] = useState("");
 
     useEffect(() => {
         get_list(fetch).then((recipes) => {
             setData(recipes);
             setState("success");
-        }).catch(() => {
+        }).catch((err) => {
             setState("failed");
+            setError(err.message);
         });
 
         return () => {};
@@ -45,14 +54,14 @@ export default function RecipeSection({children, title, fetch}: {children?: Reac
     let elems: React.ReactNode[] = [];
     if (state === "success") {
         for (let x of data) {
-            elems.push(<RecipeItem image_url={x.image_url} name={x.name} base={x.base} tags={x.tags} key={x.name}/>)
+            elems.push(<RecipeItem id={x.id} image_url={x.image_url} name={x.name} base={x.base} tags={x.tags} key={x.id}/>)
         }
     }
 
     return (
         <div className="sm:px-12 px-3">
-            <div className="text-3xl font-semibold mb-2">{title}</div>
-            {state === "loading" ? <RecipesPlaceHolder/> : state === "failed" ? <RecipeLoadFailure/> :
+            <div className={clsx("text-3xl font-semibold mb-2", state === "loading" && "text-gray-400")}>{title}</div>
+            {state === "loading" ? <RecipesPlaceHolder/> : state === "failed" ? <RecipeLoadFailure error_data={error}/> :
                 <div className="flex *:flex-shrink-0 overflow-x-auto gap-3 no-scrollbar">
                     {elems}
                 </div>
