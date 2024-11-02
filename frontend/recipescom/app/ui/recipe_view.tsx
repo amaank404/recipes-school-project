@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { get_recipe } from "@/app/repository/repository";
 import RichText from "./rich_text";
-import styles from "./recipe_view.module.css";
+import "./recipe_view.css";
 import BackButton from "./backbutton";
 import LoadingIndicator from "./loading_indicator";
 
@@ -37,7 +37,7 @@ function RecipeBanner({image_url, name, base, tags}: {image_url: string, name: s
             <img src={image_url} alt="recipe image" className="w-full h-full object-cover object-center filter brightness-[0.60]"/>
         </div>
         <div className="max-w-screen-lg w-full relative h-full flex flex-col justify-center max-sm:items-center">
-            <div className={`text-5xl sm:text-7xl lg:text-8xl font-medium ${styles.text_stroke_white} max-sm:text-center`}>
+            <div className={`text-5xl sm:text-7xl lg:text-8xl font-medium text_stroke_white lg:text_stroke_2px max-sm:text-center`}>
                 {name}
             </div>
             <div className="mt-20 sm:mt-2 tracking-[0.5em] uppercase text-2xl sm:text-4xl lg:text-5xl font-normal">
