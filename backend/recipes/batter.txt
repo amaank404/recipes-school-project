@@ -1,0 +1,57 @@
+~BEGIN_SEP_IDENTIFIER~
+Batter
+~RECIPE_NAME_SEP_IDENTIFIER~
+
+Servings: 12-15
+Prep Time: 10 minutes
+Cook Time: Varies depending on type of fried food
+Total Time: Varies depending on type of fried food
+
+~INFO_SEP_IDENTIFIER~
+
+# Description
+A versatile batter made from flour, water, and seasonings, used to coat various foods before frying. It's essential for creating crispy, golden-brown exterior and a tender interior.
+
+~DESCRIPTION_SEP_IDENTIFIER~
+
+# Ingredients
+- 1 cup all-purpose flour
+- 1/2 teaspoon salt
+- 1/4 teaspoon baking powder
+- 1 tablespoon sugar
+- 1 cup cold water
+- Vegetable oil or other frying medium for deep-frying
+
+~INGREDIENTS_SEP_IDENTIFIER~
+
+# Instructions
+To make the batter, combine the flour, salt, baking powder, and sugar in a large bowl. Whisk until well combined.
+Slowly pour in the cold water, whisking continuously until the batter reaches a smooth consistency without lumps.
+Adjust the seasoning if needed, but be cautious not to over-season.
+For specific types of battered foods, adjust the amount of liquid accordingly:
+    - For lighter coatings (e.g., fish sticks), use less water.
+    - For thicker coatings (e.g., onion rings), use more water.
+Heat about 2 inches (5 cm) of vegetable oil in a deep frying pan over medium-high heat until it reaches 375°F (190°C).
+Dip the prepared food item into the batter, ensuring it's fully coated, then carefully place it into the hot oil.
+Fry until golden brown and cooked through, adjusting the cooking time based on the food type.
+Drain excess oil using paper towels.
+
+~INSTRUCTIONS_SEP_IDENTIFIER~
+
+# Tips and Variations
+- To add extra flavor, try adding herbs (e.g., parsley, dill), spices (e.g., paprika, garlic powder), or grated cheese to the batter.
+- Experiment with different types of flours (e.g., whole wheat, rice flour) for unique textures.
+- Use this basic batter recipe as a starting point and adjust proportions according to personal preference.
+
+~TIPS_AND_VARIATIONS_SEP_IDENTIFIER~
+
+# Nutrition Information (per serving):
+- Calories: 150-200
+- Fat: 6-8g
+- Carbohydrates: 20-25g
+- Protein: 2-3g
+- Sodium: 250-300mg
+
+~NUTRITION_INFORMATION_SEP_IDENTIFIER~
+
+Remember, nutrition information may vary greatly depending on the specific ingredients used, portion sizes, and frying times. Enjoy experimenting with this versatile batter!

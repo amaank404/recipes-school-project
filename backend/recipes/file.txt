@@ -1,0 +1,61 @@
+Servings: 4
+Prep Time: 15 minutes
+Cook Time: 10 minutes
+Total Time: 25 minutes
+~INFO_SEP_IDENTIFIER~
+
+# Description
+A rich and creamy Italian pasta dish made with bacon or pancetta, eggs, parmesan cheese, and black pepper. This classic recipe is a staple of Italian cuisine.
+
+~DESCRIPTION_SEP_IDENTIFIER~
+
+# Ingredients
+- 12 oz spaghetti
+- 6 slices of bacon or pancetta, diced
+- 3 large eggs
+- 1/2 cup grated Parmesan cheese
+- Salt and black pepper, to taste
+- Fresh parsley, chopped (optional)
+
+~INGREDIENTS_SEP_IDENTIFIER~
+
+# Instructions
+To start, bring a large pot of salted water to a boil and cook the spaghetti according to package instructions until al dente. Reserve 1 cup of pasta water before draining the spaghetti.
+
+In a large skillet, cook the diced bacon over medium heat until crispy. Remove from heat and set aside on a paper towel-lined plate.
+
+In a medium bowl, whisk together the eggs, Parmesan cheese, and a pinch of salt and pepper.
+
+Add the cooked spaghetti to the bowl with the egg mixture and toss to combine, ensuring the spaghetti is well coated.
+
+Add the reserved pasta water to the bowl in small increments and continue to toss until the spaghetti is coated in a creamy sauce.
+
+Return the skillet with the bacon to medium heat and add the spaghetti and egg mixture to the pan. Toss everything together until the spaghetti is well coated in the bacon fat and the sauce has thickened.
+
+Season with salt and black pepper to taste, then serve immediately, garnished with chopped fresh parsley if desired.
+
+~INSTRUCTIONS_SEP_IDENTIFIER~
+
+# Tips and Variations
+- Use guanciale instead of bacon for an authentic Italian flavor.
+- Add some grated nutmeg to give the dish a unique twist.
+- Substitute the Parmesan cheese with other hard cheeses like Pecorino or Romano.
+- For a vegetarian version, omit the bacon and add more vegetables like mushrooms or bell peppers.
+
+~TIPS_AND_VARIATIONS_SEP_IDENTIFIER~
+
+# Nutrition Information (per serving):
+- Calories: 420
+- Protein: 22g
+- Fat: 24g
+- Saturated Fat: 10g
+- Cholesterol: 180mg
+- Carbohydrates: 30g
+- Fiber: 2g
+- Sugar: 2g
+- Sodium: 350mg
+
+~NUTRITION_INFORMATION_SEP_IDENTIFIER~
+This classic Carbonara recipe is a must-try for anyone who loves Italian cuisine! With its rich and creamy sauce, this dish is sure to become a new favorite.
+
+~CONCLUSION_SEP_IDENTIFIER~

@@ -1,0 +1,65 @@
+~BEGIN_SEP_IDENTIFIER~
+Cobbler
+~RECIPE_NAME_SEP_IDENTIFIER~
+
+Servings: 6-8 people
+Prep Time: 30 minutes
+Cook Time: 35-40 minutes
+Total Time: 65-70 minutes
+~INFO_SEP_IDENTIFIER~
+
+# Description
+A classic American dessert, cobbler is a warm, fruit-filled delight topped with a crumbly biscuit-like crust. This recipe combines juicy peaches with a crunchy oat topping, perfect for a summer evening or special occasion.
+
+~DESCRIPTION_SEP_IDENTIFIER~
+
+# Ingredients
+- 3 cups fresh or frozen peaches, sliced
+- 1/2 cup granulated sugar
+- 2 tablespoons cornstarch
+- 1 tablespoon lemon juice
+- 1/4 teaspoon ground cinnamon
+- 1/4 teaspoon nutmeg
+- 1/4 teaspoon salt
+- 1/2 cup all-purpose flour
+- 1/2 cup rolled oats
+- 1/2 cup brown sugar
+- 1/2 cup cold unsalted butter, cut into small pieces
+- 1 large egg, beaten
+- 1 teaspoon vanilla extract
+- Confectioners' sugar, for dusting (optional)
+...
+~INGREDIENTS_SEP_IDENTIFIER~
+
+# Instructions
+1. Preheat oven to 375°F (190°C). In a large bowl, combine sliced peaches, granulated sugar, cornstarch, lemon juice, cinnamon, nutmeg, and salt. Let mixture sit for about 15 minutes, until peaches start to release their juice and the mixture becomes syrupy.
+2. In another bowl, whisk together flour, oats, brown sugar, and cold butter until mixture resembles coarse crumbs.
+3. Pour peach mixture into a 9x13-inch baking dish and top with crumb mixture, spreading evenly to cover the entire surface.
+4. Bake for 35-40 minutes, or until topping is golden brown and filling is bubbly.
+5. Remove from oven and let cool for 10-15 minutes before serving. Dust with confectioners' sugar, if desired.
+...
+~INSTRUCTIONS_SEP_IDENTIFIER~
+
+# Tips and Variations
+- To make individual cobblers, divide peach mixture among 6 ramekins or small baking dishes and top each with a spoonful of crumb mixture. Bake at 375°F (190°C) for 20-25 minutes, or until topping is golden brown and filling is bubbly.
+- Substitute other fruits like blueberries, strawberries, or blackberries for peaches.
+- Add a splash of bourbon or rum to the peach mixture for an adult twist on this classic dessert.
+...
+~TIPS_AND_VARIATIONS_SEP_IDENTIFIER~
+
+# Nutrition Information (per serving):
+- Calories: 320
+- Fat: 14g
+- Saturated fat: 8g
+- Cholesterol: 60mg
+- Sodium: 200mg
+- Carbohydrates: 45g
+- Fiber: 4g
+- Sugar: 28g
+- Protein: 3g
+...
+~NUTRITION_INFORMATION_SEP_IDENTIFIER~
+
+This classic peach cobbler recipe is sure to become a family favorite! The combination of sweet, juicy peaches and crunchy oat topping is irresistible. Whether you're serving it warm with vanilla ice cream or enjoying it as a snack, this dessert is sure to satisfy your cravings. So go ahead, indulge in a slice (or two!) and savor the flavors of this beloved American treat!
+
+~CONCLUSION_SEP_IDENTIFIER~

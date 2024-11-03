@@ -10,6 +10,7 @@ packages = [{ include = "recipes_backend_server" }]
 python = "^3.12"
 Flask = "^3.0.3"
 PyMySQL = "^1.1.1"
+python-dotenv = "^1.0.1"
 
 
 [build-system]
