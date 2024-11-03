@@ -6,6 +6,7 @@ import RichText from "./rich_text";
 import "./recipe_view.css";
 import BackButton from "./backbutton";
 import LoadingIndicator from "./loading_indicator";
+import Image from "next/image";
 
 function RecipePlaceholder() {
     return <div className="absolute top-0 left-0 flex items-center justify-center h-screen w-screen bg-white">
@@ -34,7 +35,7 @@ function RecipeBanner({image_url, name, base, tags}: {image_url: string, name: s
 
     return <div className="w-full h-[100vh] relative flex flex-col px-5 sm:px-20 justify-center text-white items-center">
         <div className="absolute top-0 bottom-0 left-0 right-0 bg-slate-400 -z-10">
-            <img src={image_url} alt="recipe image" className="w-full h-full object-cover object-center filter brightness-[0.60]"/>
+            <Image src={image_url} alt="recipe image" className="w-full h-full object-cover object-center filter brightness-[0.60]"/>
         </div>
         <div className="max-w-screen-lg w-full relative h-full flex flex-col justify-center max-sm:items-center">
             <div className={`text-5xl sm:text-7xl lg:text-8xl font-medium text_stroke_white lg:text_stroke_2px max-sm:text-center`}>
@@ -64,7 +65,9 @@ export default function RecipeView({id}: {id: string}) {
             setErr(err.message);
             setStatus("failed");
         })
-    }, [])
+
+        return () => {setStatus("loading")};
+    }, [id]);
 
     if (status === "loading") {
         return <RecipePlaceholder />;

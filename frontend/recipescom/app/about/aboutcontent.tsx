@@ -4,7 +4,7 @@
 import { useRouter } from "next/navigation";
 
 export default function AboutContent() {
-    let router = useRouter();
+    const router = useRouter();
 
     return <div className="flex items-center justify-center flex-col">
         <div className="mt-5 w-full px-5 flex items-center text-blue-600">

@@ -1,9 +1,9 @@
 'use client';
 
-function NavBarItem ({label, action, icon}: {label?: string, action?: Function, icon?: string}) {
+function NavBarItem ({label, action, icon}: {label?: string, action?: () => void, icon?: string}) {
     let label_content: string = label || "Unknown";
     let new_action = action || defaultAction;
-    return <div className="px-3 py-2 sm:px-8 sm:py-3 bg-black bg-opacity-0 hover:bg-opacity-50 text-nowrap cursor-pointer flex flex-nowrap gap-1 items-center max-sm:flex-grow justify-center" onClick={new_action()}>
+    return <div className="px-3 py-2 sm:px-8 sm:py-3 bg-black bg-opacity-0 hover:bg-opacity-50 text-nowrap cursor-pointer flex flex-nowrap gap-1 items-center max-sm:flex-grow justify-center" onClick={new_action}>
         {typeof icon === undefined ? (<></>) : (<div className="material-symbols-rounded text-xl select-none"> {icon} </div>)}
         {label_content}
     </div>

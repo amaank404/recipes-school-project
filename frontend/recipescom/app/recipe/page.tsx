@@ -2,8 +2,9 @@
 
 import { useSearchParams } from "next/navigation";
 import RecipeView from "../ui/recipe_view";
+import { Suspense } from "react";
 
-export default function RecipePage() {
+function RecipeSuspenseWrapper() {
     const params = useSearchParams();
     const id = params.get("id");
     if (id === null) {
@@ -13,4 +14,10 @@ export default function RecipePage() {
     return <>
         <RecipeView id={id}/>
     </>
+}
+
+export default function RecipePage() {
+    return <Suspense>
+        <RecipeSuspenseWrapper/>
+    </Suspense>
 }

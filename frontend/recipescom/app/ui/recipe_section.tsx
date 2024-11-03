@@ -48,8 +48,8 @@ export default function RecipeSection({title, fetch}: {title: string, fetch: str
             setError(err.message);
         });
 
-        return () => {};
-    }, []);
+        return () => {setState("loading")};
+    }, [fetch]);
 
     let elems: React.ReactNode[] = [];
     if (state === "success") {
