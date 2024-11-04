@@ -1,2 +1,5 @@
+from . import app
+
 def run_app():
-    print("Ran app")
+    app.run(debug=True)
+    
