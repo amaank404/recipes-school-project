@@ -16,3 +16,8 @@ def get_recipes(category):
     d = []
 
     return jsonify(d)
+
+
+@app.route("/api/v1/admin/add_recipe", methods=["POST"])
+def admin_add_recipe():
+    pass

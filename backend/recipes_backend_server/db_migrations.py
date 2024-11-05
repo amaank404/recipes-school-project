@@ -1,4 +1,4 @@
-migrations = [""]
+from .dbutil import *
 
 
 class Migrations:
@@ -14,15 +14,47 @@ class Migrations:
             v = int(x.removeprefix("mig"))
             if v > self.v:
                 getattr(self, x)()
-                cursor = self.conn.cursor()
-                cursor.execute(
-                    "UPDATE metadata SET value=? WHERE name='version'",
-                    (str(v),),
-                )
-                self.conn.commit()
+                with self.conn.cursor() as cursor:
+                    cursor.execute(
+                        "UPDATE metadata SET value=%s WHERE name='version'",
+                        (str(v),),
+                    )
+                    self.conn.commit()
 
     def mig1(self):
         print("Migrated to v1")
+        executescript(
+            self.conn,
+            """
+CREATE TABLE recipes(
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    base VARCHAR(40) NOT NULL,
+    date_added DATETIME,
+    image_file VARCHAR(255),
+    recipe_content TEXT
+);
+
+CREATE TABLE tags(
+    id INTEGER,
+    tag VARCHAR(30),
+    CONSTRAINT FK_RecipeTag FOREIGN KEY (id) REFERENCES recipes(id) ON UPDATE CASCADE ON DELETE CASCADE
+);
+""",
+        )
+
+    def mig2(self):
+        print("Create popularity table")
+        executescript(
+            self.conn,
+            """
+CREATE TABLE popularity (
+    id INTEGER,
+    popularity BIGINT,
+    CONSTRAINT Fk_PopularityId FOREIGN KEY (id) REFERENCES recipes(id) ON UPDATE CASCADE ON DELETE CASCADE
+);
+""",
+        )
 
 
 def migrate(conn, v):

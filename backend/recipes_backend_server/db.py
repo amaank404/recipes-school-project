@@ -1,6 +1,7 @@
-from mysql.connector import connect, MySQLConnection
-from mariadb import connect as mariadb_connect
+from pymysql import connect, Connection
 from .db_migrations import migrate
+from .types import *
+from .dbutil import *
 import os
 
 # Load from environment variables
@@ -12,24 +13,8 @@ user = os.getenv("RECIPES_BACKEND_DB_USER", "root")
 passwd = os.getenv("RECIPES_BACKEND_DB_PASSWORD")
 
 
-def executescript(conn, script):
-    cur = conn.cursor()
-    for x in script.split(";"):
-        q = x.replace("\n", " ").replace("\r", " ")
-        if q.strip() == "":
-            continue
-        try:
-            cur.execute(q)
-        except:
-            print(q)
-            raise
-    conn.commit()
-
-
-if dbtype == "mysql":
+if dbtype in ("mysql", "mariadb"):
     conn = connect(host=host, port=port, user=user, passwd=passwd)
-elif dbtype == "mariadb":
-    conn = mariadb_connect(host=host, port=port, user=user, passwd=passwd)
 else:
     raise ValueError(
         f"No such db type as: {dbtype} provided by environment RECIPES_BACKEND_DB_TYPE"
@@ -45,48 +30,128 @@ USE {database};
 
 
 class RecipesDB:
-    def __init__(self, conn: MySQLConnection):
+    def __init__(self, conn: Connection):
         self.conn = conn
         self.create_db()
 
     def create_db(self):
         executescript(
-            conn,
+            self.conn,
             """
-CREATE TABLE IF NOT EXISTS recipes(
-    id INTEGER PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(100) NOT NULL,
-    base VARCHAR(40) NOT NULL,
-    date_added DATETIME,
-    image_file VARCHAR(255),
-    recipe_content TEXT
-);
-
-CREATE TABLE IF NOT EXISTS tags(
-    id INTEGER,
-    tag VARCHAR(30),
-    CONSTRAINT FK_RecipeTag FOREIGN KEY (id) REFERENCES recipes(id) ON UPDATE CASCADE ON DELETE CASCADE
-);
-
 CREATE TABLE IF NOT EXISTS metadata (
     name VARCHAR(20) PRIMARY KEY,
     value VARCHAR(200)
 );
 """,
         )
+
         v = int(self.set_metadata_default("version", "0"))
         self.conn.commit()
         migrate(self.conn, v)
 
     def set_metadata_default(self, key, value):
-        cur = self.conn.cursor()
-        cur.execute("SELECT value FROM metadata WHERE name=?", (key,))
-        if cur.rowcount == 0:
-            cur.execute("INSERT INTO metadata VALUES (?, ?)", (key, value))
+        with self.conn.cursor() as cur:
+            cur.execute("SELECT value FROM metadata WHERE name=%s", (key,))
+            if cur.rowcount == 0:
+                cur.execute("INSERT INTO metadata VALUES (%s, %s)", (key, value))
+                self.conn.commit()
+                return value
+            v = cur.fetchone()[0]
+            return v
+
+    # Methods
+    def create_recipe(self, recipe: Recipe):
+        with self.conn.cursor() as cur:
+            cur.execute(
+                "INSERT INTO recipes VALUES (%s,%s,%s,%s,%s,%s)",
+                (
+                    recipe.id,
+                    recipe.name,
+                    recipe.base,
+                    recipe.date_added.strftime("%Y-%m-%d %H:%M:%S"),
+                    recipe.image_file,
+                ),
+            )
+            cur.executemany(
+                "INSERT INTO tags VALUES (%s, %s)",
+                [(recipe.id, x) for x in recipe.tags],
+            )
             self.conn.commit()
-            return value
-        v = cur.fetchone()[0]
-        return v
+
+    def get_recipe(self, id: int, contents: bool = True) -> Recipe:
+        with self.conn.cursor() as cur:
+            cur.execute(
+                f"SELECT name, base, date_added, image_file{', recipe_content' if contents else ''} FROM recipes WHERE id=%s",
+                (id,),
+            )
+            name, base, date_added, image_file, *recipe_content = cur.fetchone()
+
+            cur.execute("SELECT tag FROM tags WHERE id=%s", (id,))
+            tags = [x[0] for x in cur]
+
+        if not contents:
+            recipe_content.append("")
+
+        return Recipe(
+            id=id,
+            name=name,
+            base=base,
+            date_added=date_added,
+            image_file=image_file,
+            recipe_content=recipe_content[0],
+            tags=tags,
+        )
+
+    def _validate_order_type(self, order_by: str) -> str:
+        valid_order_by_types = ("name", "base", "date_added")
+        order_by = order_by.replace("-", "_")
+        if order_by not in valid_order_by_types:
+            raise ValueError("Unknown order by value")
+        return order_by
+
+    def get_category(
+        self, category: str, page_limit: int = 10, page: int = 0
+    ) -> list[Recipe]:
+
+        cat_type, *cat_params, cat_order = category.split("_")
+
+        if cat_order.upper().strip() not in ("ASC", "DESC", ""):
+            raise ValueError("Unknown order type, choose asc or desc")
+
+        if cat_type == "tag":
+            (tag, order_by) = cat_params
+
+            tag = tag.replace("-", " ")
+            order_by = self._validate_order_type(order_by)
+
+            with self.conn.cursor() as cur:
+                cur.execute(
+                    f"SELECT r.id, r.name, r.base, r.date_added, r.image_file FROM tags t INNER JOIN recipes r ON t.id = r.id WHERE tag=%s ORDER BY r.{order_by} {cat_order} LIMIT %s OFFSET %s",
+                    (tag, page_limit, page_limit * page),
+                )
+        elif cat_type == "top":
+            with self.conn.cursor() as cur:
+                cur.execute(
+                    "SELECT r.id, r.name, r.base, r.date_added, r.image_file FROM popularity p INNER JOIN recipes r ON p.id = r.id ORDER BY popularity DESC LIMIT %s OFFSET %s",
+                    (page_limit, page_limit * page),
+                )
+        elif cat_type == "base":
+            (base, order_by) = cat_params
+
+            base = base.replace("-", " ")
+            order_by = self._validate_order_type(order_by)
+
+            with self.conn.cursor() as cur:
+                cur.execute(
+                    f"SELECT id, name, base, date_added, image_file FROM recipes WHERE base=%s ORDER BY {order_by} {cat_order} LIMIT %s OFFSET %s",
+                    (base, page_limit, page_limit * page),
+                )
+        elif cat_type == "date-added":
+            with self.conn.cursor() as cur:
+                cur.execute(
+                    f"SELECT id, name, base, date_added, image_file FROM recipes ORDER BY date_added DESC LIMIT %s OFFSET %s",
+                    (page_limit, page_limit * page),
+                )
 
 
 recipes_db = RecipesDB(conn)
