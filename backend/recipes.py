@@ -32,22 +32,22 @@ Total Time: <total time required including prepation and cooking in minutes>
 
 # Ingredients
 - <ingridients as a list>
-...
+
 ~INGREDIENTS_SEP_IDENTIFIER~
 
 # Instructions
 <instructions as a list of paragraphs>
-...
+
 ~INSTRUCTIONS_SEP_IDENTIFIER~
 
 # Tips and Variations
-- <tips and variations the user can do>
-...
+- <tips and variations the user can do as a list>
+
 ~TIPS_AND_VARIATIONS_SEP_IDENTIFIER~
 
 # Nutrition Information (per serving):
 - <nutrition parameter>: <value of the parameter>
-...
+
 ~NUTRITION_INFORMATION_SEP_IDENTIFIER~
 
 <conclusion>
@@ -64,7 +64,7 @@ def get_recipe(recipe: str):
             "messages": [
                 {
                     "role": "system",
-                    "content": "You are a helpful assistant that writes recipes for the user in desired format, you will not use any other format, replace your content within < and >, ... indictes you can repeat the above template line",
+                    "content": "You are a helpful assistant that writes recipes for the user in desired format, you will not use any other format, replace your content within < and >",
                 },
                 {"role": "user", "content": recipe_prompt.format(recipe=recipe)},
             ],
