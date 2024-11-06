@@ -1,0 +1,33 @@
+.richText {
+    font-size: 1rem;
+}
+
+.richText h1 {
+    font-size: 3em;
+    margin-bottom: 0.2em;
+    margin-top: 0.5em;
+}
+
+.richText ol {
+    list-style-type: decimal;   
+}
+
+.richText ul {
+    list-style-type: disc;
+}
+
+.richText li {
+    margin-left: 1.5em;
+    padding-left: 0.5em;
+    margin-top: 0.3em;
+}
+
+.richText p {
+    margin: 1em 0 1em;
+}
+
+@media screen and (min-width: 700px) {
+    .varSize.richText {
+        font-size: 1.3rem;
+    }
+}

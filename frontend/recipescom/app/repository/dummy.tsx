@@ -1,3 +1,5 @@
+import { Recipe, RecipeData } from "./types";
+
 export class DummyRepository {
     async get_list(cagegory: string): Promise<Recipe[]> {
         // await new Promise(resolve => setTimeout(resolve, 2000));
@@ -74,37 +76,38 @@ export class DummyRepository {
         switch (id) {
             case "c122":
                 return {
-                    id: "c122",
-                    image_url: "/images/carbonara.jpg",
-                    name: "Carbonara", // from the Italian Village of Pisa",
-                    base: "pasta",
-                    tags: ["Italian", "Advanced"],
-                    sections: [
-                        {title: "Ingridients",
-                        content: [
-                            {type: "list",
-                            data: [
-                                "Pasta: 400g spaghetti or fettuccine",
-                                "Pancetta or Guanciale: 150g, diced",
-                                "Eggs: 3 large",
-                                "Parmesan Cheese: 100g, grated (or Pecorino Romano for a more traditional flavor)",
-                                "Garlic: 1 clove, minced (optional)",
-                                "Black Pepper: Freshly ground, to taste",
-                                "Salt: For pasta water",
-                                "Olive Oil: 1 tablespoon (optional)",
-                            ]}
-                        ]},
-                        {title: "Instructions", 
-                        content: [
-                            {type: "para",
-                            data: [
-                                "To begin, fill a large pot with water and add a generous amount of salt before bringing it to a boil. Once the water is boiling, add the spaghetti or fettuccine and cook according to the package instructions until it reaches al dente. Before draining the pasta, reserve about one cup of the pasta water for later use.",
-                                "While the pasta is cooking, heat a large skillet over medium heat and add the diced pancetta or guanciale. Cook it until it becomes crispy, which should take about 5 to 7 minutes. If you like, you can add minced garlic in the last minute of cooking for extra flavor. In a separate bowl, whisk together the eggs and grated cheese until they are well combined. Don’t forget to add freshly ground black pepper to taste.",
-                                "Once the pasta is cooked and drained, add it directly to the skillet with the crispy pancetta or guanciale. It’s important to remove the skillet from heat at this point to prevent scrambling the eggs. Quickly pour the egg and cheese mixture over the hot pasta, tossing vigorously to create a creamy sauce. If you find that the sauce is too thick, gradually add some of the reserved pasta water until you achieve your desired consistency.",
-                                "Finally, divide the carbonara into serving bowls and garnish each portion with additional grated cheese and freshly cracked black pepper. Enjoy your homemade carbonara—buon appetito!"
-                            ]}
-                        ]}
-                    ]
+                    recipe: {
+                        id: "c122",
+                        image_url: "/images/carbonara.jpg",
+                        name: "Carbonara", // from the Italian Village of Pisa",
+                        base: "pasta",
+                        tags: ["Italian", "Advanced"]
+                    },
+                    content: `
+# Ingredients:
+
+* 1 pound spaghetti
+* 4 large eggs
+* 1 cup grated Pecorino Romano cheese
+* 4 ounces guanciale (or pancetta)
+* 1/4 cup pasta water
+* Salt and freshly ground black pepper
+
+# Instructions:
+
+
+**Cook the pasta:** Bring a large pot of salted water to a boil. Add the spaghetti and cook according to package instructions until al dente. Reserve 1/4 cup of the pasta water.
+
+**Prepare the guanciale:** Cut the guanciale into small cubes. Cook in a large skillet over medium heat until crispy and rendered.
+
+**Create the sauce:** In a large bowl, whisk together the eggs and Pecorino Romano cheese until smooth.
+
+**Combine the pasta and sauce:** Drain the pasta and add it directly to the bowl with the egg mixture. Toss to coat evenly. 
+
+**Finish the dish:** Add the rendered guanciale and the reserved pasta water to the pasta mixture. Toss quickly until the sauce is creamy and coats the pasta. Season with salt and pepper to taste.
+
+**Serve immediately:** Serve the Carbonara hot with additional grated Pecorino Romano cheese, if desired.
+`
                 }
         }
 

@@ -7,6 +7,7 @@ import "./recipe_view.css";
 import BackButton from "./backbutton";
 import LoadingIndicator from "./loading_indicator";
 import Image from "next/image";
+import { RecipeData } from "@/app/repository/types";
 
 function RecipePlaceholder() {
     return <div className="absolute top-0 left-0 flex items-center justify-center h-screen w-screen bg-white">
@@ -80,8 +81,8 @@ export default function RecipeView({id}: {id: string}) {
 
         return <div className="flex flex-col items-center">
             <BackButton/>
-            <RecipeBanner image_url={data.image_url} name={data.name} base={data.base} tags={data.tags}/>
-            <RichText content={data.sections} classList="p-4 max-w-screen-md"/>
+            <RecipeBanner image_url={data.recipe.image_url} name={data.recipe.name} base={data.recipe.base} tags={data.recipe.tags}/>
+            <RichText classList="p-4 max-w-screen-md" variableSize={true}>{data.content}</RichText>
         </div>
     }
 }

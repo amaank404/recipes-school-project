@@ -56,6 +56,16 @@ CREATE TABLE popularity (
 """,
         )
 
+    def mig3(self):
+        print("Adding not null constraints to date_added and recipe_content")
+        executescript(
+            self.conn,
+            """
+ALTER TABLE recipes MODIFY date_added DATETIME NOT NULL;
+ALTER TABLE recipes MODIFY recipe_content TEXT NOT NULL DEFAULT '';
+""",
+        )
+
 
 def migrate(conn, v):
     Migrations(conn, v).apply_migrations()

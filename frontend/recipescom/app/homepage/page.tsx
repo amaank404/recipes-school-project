@@ -19,8 +19,8 @@ export default function HomePage () {
                 </div>
             </div>
             <div className="py-6 flex flex-col gap-5">
-                <RecipeSection title="Popular" fetch="popular" />
-                <RecipeSection title="Easy" fetch="easy" />
+                <RecipeSection title="Popular" fetch="top_desc" />
+                <RecipeSection title="Easy" fetch="tag_Easy_date-added_desc" />
                 <RecipeSection title="Not Found" fetch="not found" />
             </div>
         </div>

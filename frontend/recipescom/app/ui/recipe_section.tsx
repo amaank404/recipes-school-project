@@ -4,6 +4,7 @@ import RecipeItem from "./recipe_item";
 import React, { useEffect, useState } from "react";
 import { get_list } from "@/app/repository/repository";
 import clsx from "clsx";
+import { Recipe } from "../repository/types";
 
 // 192x172 px
 // 12x10.75 rem 
@@ -22,6 +23,14 @@ function RecipesPlaceHolder () {
     }
 
     return (<div className="flex *:flex-shrink-0 overflow-x-hidden gap-3"> {elems} </div>);
+}
+
+function RecipesEmptyPlaceHolder() {
+    return <div className="w-full bg-slate-100 text-slate-400 rounded-md text-center h-44 align-middle flex flex-col justify-center">
+        <div className="material-symbols-rounded text-2xl">info</div>
+        <h1 className="text-xl font-semibold">Nothing Here</h1>
+        <div>Check in sometime later!</div>
+    </div>
 }
 
 function RecipeLoadFailure ({error_data}: {error_data?: string}) {
@@ -62,9 +71,10 @@ export default function RecipeSection({title, fetch}: {title: string, fetch: str
         <div className="sm:px-12 px-3">
             <div className={clsx("text-3xl font-semibold mb-2", state === "loading" && "text-gray-400")}>{title}</div>
             {state === "loading" ? <RecipesPlaceHolder/> : state === "failed" ? <RecipeLoadFailure error_data={error}/> :
+                (elems.length === 0 ? <RecipesEmptyPlaceHolder/> :
                 <div className="flex *:flex-shrink-0 overflow-x-auto gap-3 no-scrollbar">
                     {elems}
-                </div>
+                </div>)
             }
         </div>
     );
