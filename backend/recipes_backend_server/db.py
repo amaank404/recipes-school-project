@@ -8,9 +8,6 @@ from .dbutil import *
 from .squeries import SearchQuery
 import os
 
-root = logging.getLogger()
-root.addHandler(default_handler)
-
 # Load from environment variables
 dbtype = os.getenv("RECIPES_BACKEND_DB_TYPE", "mysql")
 host = os.getenv("RECIPES_BACKEND_DB_HOST", "localhost")

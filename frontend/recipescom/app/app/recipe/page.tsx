@@ -1,7 +1,7 @@
 'use client';
 
 import { useSearchParams } from "next/navigation";
-import RecipeView from "../ui/recipe_view";
+import RecipeView from "../../ui/recipe_view";
 import { Suspense } from "react";
 
 function RecipeSuspenseWrapper() {
