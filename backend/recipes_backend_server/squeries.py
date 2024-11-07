@@ -1,4 +1,5 @@
 from typing import Self
+import re
 
 _allowed_ops = ["=", ">", "<", "<>", "!=", ">=", "<="]
 
@@ -11,17 +12,25 @@ def _alias_gen():
 
 def _search_query(usr_data: str) -> str:
     return (
-        usr_data.replace("'", "''")
+        "'"
+        + usr_data.replace("'", "''")
         .replace("%", r"\%")
         .replace("_", r"\_")
         .replace("*", "%")
         .replace("?", "_")
         .replace(" ", "?%")
+        + "'"
     )
 
 
-def _escape(s: str) -> str:
-    return s.replace("'", "''")
+def _escape(s: str | int | float) -> str:
+    if isinstance(s, (int, float)):
+        return str(s)
+
+    return f"'{s.replace("'", "''")}'"
+
+
+_COL_PATTERN = re.compile(r"\w*\.?\w+")
 
 
 def _checkcol(s: str) -> bool:
@@ -29,7 +38,7 @@ def _checkcol(s: str) -> bool:
         (
             "\n" not in s,
             " " not in s,
-            s.isalnum(),
+            _COL_PATTERN.match(s) is not None,
             s.isascii(),
             isinstance(s, str),
         )
@@ -42,9 +51,11 @@ class SearchQuery:
         self._columns: list[str] = []
         self._joins: list[tuple[str, str, str, str]] = []
         self._search: list[tuple[str, str]] = []
-        self._where: list[tuple[str, str]] = []
         self._between: list[tuple[str, int | float, int | float]] = []
         self._ops: list[tuple[str, int | float, str]] = []
+        self._order_by: list[tuple[str, str]] = []
+        self._limit = None
+        self._offset = None
 
     def table(self, table: str) -> Self:
         assert _checkcol(table)
@@ -63,8 +74,15 @@ class SearchQuery:
         self._search.append((column, query))
         return self
 
-    def where(self, column: str, val: str) -> Self:
-        self._where.append((column, val))
+    def order_by(self, column: str, order: str = None) -> Self:
+        if order is None:
+            order = "ASC"
+        assert order.upper() in ["ASC", "DESC"]
+        self._order_by.append((column, order))
+        return self
+
+    def equal(self, column: str, val: str) -> Self:
+        self._ops.append((column, val, "="))
         return self
 
     def between(self, column: str, start: float | int, end: float | int) -> Self:
@@ -75,15 +93,47 @@ class SearchQuery:
         self._ops.append((column, st, ">"))
         return self
 
+    def lesser(self, column: str, st) -> Self:
+        self._ops.append((column, st, "<"))
+        return self
+
+    def greater_eq(self, column: str, st) -> Self:
+        self._ops.append((column, st, ">="))
+        return self
+
+    def lesser_eq(self, column: str, st) -> Self:
+        self._ops.append((column, st, "<="))
+        return self
+
+    def not_equal(self, column: str, st) -> Self:
+        self._ops.append((column, st, "<>"))
+        return self
+
+    def limit(self, limit: int) -> Self:
+        self._limit = limit
+        return self
+
+    def offset(self, offset: int) -> Self:
+        self._offset = offset
+        return self
+
+    def _prepend_col(self, col: str) -> str:
+        if "." in col:
+            return col
+        else:
+            return f"{self._table}.{col}"
+
     def build(self) -> str:
+        assert self._table is not None
+
         query = ["SELECT"]
 
         assert all(map(_checkcol, self._columns))
 
-        cols = ",".join(self._columns)
+        cols = ", ".join(map(self._prepend_col, self._columns))
         cols = "*" if len(cols) == 0 else cols
 
-        query.append(cols)
+        query.append(f"{cols}")
         query.append("FROM")
         query.append(self._table)
 
@@ -98,32 +148,48 @@ class SearchQuery:
             )
 
         query.append("WHERE")
-        for col, p in self._where:
-            assert _checkcol(col)
-            assert isinstance(p, (str, float, int))
-            query.append(f"({col} = '{_escape(p)}')")
-            query.append("AND")
 
         for col, p, op in self._ops:
             assert _checkcol(col)
-            assert isinstance(p, (int, float))
+            assert isinstance(p, (str, int, float))
             assert op in _allowed_ops, "Operation not found"
-            query.append(f"({col} {op} {p})")
+            col = self._prepend_col(col)
+            query.append(f"({col} {op} {_escape(p)})")
             query.append("AND")
 
         for col, a, b in self._between:
             assert _checkcol(col)
             assert isinstance(a, (int, float))
             assert isinstance(b, (int, float))
+            col = self._prepend_col(col)
             query.append(f"({col} BETWEEN {a} AND {b})")
             query.append("AND")
 
         for col, p in self._search:
             assert _checkcol(col)
             assert isinstance(p, str)
-            query.append(f"({col} LIKE '{_search_query(p)}' ESCAPE '\\')")
+            col = self._prepend_col(col)
+            query.append(f"({col} LIKE {_search_query(p)} ESCAPE '\\')")
             query.append("AND")
 
         query.pop()
+
+        query.append("ORDER BY")
+
+        for col, order in self._order_by:
+            assert _checkcol(col)
+            col = self._prepend_col(col)
+            query.append(f"{col} {order}")
+            query.append(",")
+
+        query.pop()
+
+        if self._limit is not None:
+            assert isinstance(self._limit, int)
+            query.append(f"LIMIT {self._limit}")
+
+        if self._offset is not None:
+            assert isinstance(self._offset, int)
+            query.append(f"OFFSET {self._offset}")
 
         return " ".join(query)

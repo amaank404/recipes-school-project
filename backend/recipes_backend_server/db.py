@@ -1,9 +1,15 @@
+import logging
+from flask.logging import default_handler
 from pymysql import connect, Connection
 import pymysqlpool
 from .db_migrations import migrate
 from .types import *
 from .dbutil import *
+from .squeries import SearchQuery
 import os
+
+root = logging.getLogger()
+root.addHandler(default_handler)
 
 # Load from environment variables
 dbtype = os.getenv("RECIPES_BACKEND_DB_TYPE", "mysql")
@@ -47,6 +53,18 @@ connpool = pymysqlpool.ConnectionPool(
 
 
 class RecipesDB:
+    _allowed_search_fns = {
+        "search",
+        "order_by",
+        "equal",
+        "between",
+        "greater",
+        "lesser",
+        "greater_eq",
+        "lesser_eq",
+        "not_equal",
+    }
+
     def __init__(self, connpool):
         self.connpool = connpool
         self.create_db()
@@ -213,8 +231,45 @@ CREATE TABLE IF NOT EXISTS metadata (
 
         return d
 
-    def search(self, query: dict[str, str]):
-        pass
+    def search(self, query: list[str, str], page_limit: int = 10, page: int = 0):
+        q = SearchQuery()
+
+        for x, *params in query:
+            if x not in self._allowed_search_fns:
+                raise TypeError(f"Invalid search function: {x}")
+            getattr(q, x)(*params)
+
+        s = (
+            q.table("recipes")
+            .join("tags", "id", "id")
+            .join("popularity", "id", "id")
+            .columns("id", "name", "base", "date_added", "image_file")
+            .limit(page_limit)
+            .offset(page_limit * page)
+            .build()
+        )
+
+        conn = self.connpool.get_connection()
+        with conn.cursor() as cur:
+            print(f"Run search query: {s}")
+            cur.execute(s)
+            data = cur.fetchall()
+
+        conn.close()
+
+        d = []
+
+        for id, name, base, date_added, image_file in data:
+            d.append(
+                Recipe(
+                    id=id,
+                    name=name,
+                    base=base,
+                    image_file=image_file,
+                    date_added=to_datetime(date_added),
+                )
+            )
+        return d
 
 
 recipes_db = RecipesDB(connpool)

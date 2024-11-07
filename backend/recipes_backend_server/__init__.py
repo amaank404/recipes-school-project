@@ -29,7 +29,7 @@ def handle_exception(e):
     except:
         response = Response(status=500)
 
-    # raise e
+    raise e
     # replace the body with JSON
     response.data = json.dumps(
         {
@@ -63,6 +63,18 @@ def get_recipe(id):
 @app.route("/api/v1/images/<fname>")
 def get_images(fname):
     return send_from_directory(public_directory, fname)
+
+
+@app.route("/api/v1/recipes/search", methods=["POST"])
+def search_recipes():
+    limit = request.args.get("limit", 10)
+    if limit > 50:
+        raise ValueError("Limit can not be greater than 50")
+    page = request.args.get("page", 0)
+
+    recipes = recipes_db.search(request.json, limit, page)
+
+    return jsonify([x.as_recipe("/api/v1/images/{fname}") for x in recipes])
 
 
 app.register_blueprint(admin, url_prefix="/admin")
