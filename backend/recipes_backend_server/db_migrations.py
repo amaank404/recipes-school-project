@@ -62,7 +62,7 @@ CREATE TABLE popularity (
             self.conn,
             """
 ALTER TABLE recipes MODIFY date_added DATETIME NOT NULL;
-ALTER TABLE recipes MODIFY recipe_content TEXT NOT NULL DEFAULT '';
+ALTER TABLE recipes MODIFY recipe_content TEXT NOT NULL;
 """,
         )
 

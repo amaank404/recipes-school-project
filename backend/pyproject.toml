@@ -13,6 +13,7 @@ PyMySQL = "^1.1.1"
 python-dotenv = "^1.0.1"
 requests = "^2.32.3"
 flask-cors = "^5.0.0"
+pymysql-pool = "^0.4.6"
 
 
 [build-system]
