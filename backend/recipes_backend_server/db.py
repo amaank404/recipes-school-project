@@ -36,14 +36,13 @@ executescript(
     conn,
     f"""
 CREATE DATABASE IF NOT EXISTS {database};
-"""
+""",
 )
 
 conn.close()
 
 connpool = pymysqlpool.ConnectionPool(
-    size=2, maxsize=5, pre_create_num=2,
-    name='pool1', **db_config
+    size=5, maxsize=10, pre_create_num=5, name="pool1", **db_config
 )
 
 
@@ -213,6 +212,9 @@ CREATE TABLE IF NOT EXISTS metadata (
             )
 
         return d
+
+    def search(self, query: dict[str, str]):
+        pass
 
 
 recipes_db = RecipesDB(connpool)
