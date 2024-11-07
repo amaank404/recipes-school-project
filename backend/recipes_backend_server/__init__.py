@@ -29,7 +29,7 @@ def handle_exception(e):
     except:
         response = Response(status=500)
 
-    raise e
+    # raise e
     # replace the body with JSON
     response.data = json.dumps(
         {
