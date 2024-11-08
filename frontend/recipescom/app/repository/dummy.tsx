@@ -4,7 +4,7 @@ export class DummyRepository {
     async get_list(cagegory: string): Promise<Recipe[]> {
         // await new Promise(resolve => setTimeout(resolve, 2000));
         switch (cagegory) {
-            case "popular":
+            case "top_desc":
                 return [
                     {
                         id: "c12",
@@ -42,7 +42,7 @@ export class DummyRepository {
                         tags: ["Italian", "Advanced"],
                     },
                 ];
-            case "easy":
+            case "tag_Easy_date-added_desc":
                 return [
                     {
                         id: "c23",

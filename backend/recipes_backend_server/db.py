@@ -121,7 +121,12 @@ CREATE TABLE IF NOT EXISTS metadata (
                 f"SELECT name, base, date_added, image_file{', recipe_content' if contents else ''} FROM recipes WHERE id=%s",
                 (id,),
             )
-            name, base, date_added, image_file, *recipe_content = cur.fetchone()
+
+            d = cur.fetchone()
+            if d is None:
+                raise ValueError("No such recipe")
+
+            name, base, date_added, image_file, *recipe_content = d
 
             cur.execute("SELECT tag FROM tags WHERE id=%s", (id,))
             tags = [x[0] for x in cur]

@@ -6,26 +6,10 @@ import RichText from "./rich_text";
 import "./recipe_view.css";
 import BackButton from "./backbutton";
 import LoadingIndicator from "./loading_indicator";
+import LoadFailure from "./load_failure"
 import Image from "next/image";
 import { RecipeData } from "@/app/repository/types";
-
-function RecipePlaceholder() {
-    return <div className="absolute top-0 left-0 flex items-center justify-center h-screen w-screen bg-white">
-        <BackButton/>
-        <LoadingIndicator/>
-    </div>
-}
-
-function RecipeLoadFailure({err}: {err?: string}) {
-    return <div className="absolute top-0 left-0 flex items-center justify-center h-screen w-screen bg-white">
-        <BackButton/>
-        <div className="w-4/5 max-w-screen-sm bg-red-100 text-red-600 rounded-md text-center h-44 align-middle flex flex-col justify-center">
-            <div className="material-symbols-rounded text-2xl">error</div>
-            <div>Something went wrong <br/> Please reload the page </div>
-            {err ? <div className="font-mono">Error: {err}</div>: <></>}
-        </div>
-    </div>
-}
+import Loader from "./loader";
 
 function RecipeBanner({image_url, name, base, tags}: {image_url: string, name: string, base: string, tags: string[]}) {
     let tags_elem = tags.map((tag) => {
@@ -71,9 +55,9 @@ export default function RecipeView({id}: {id: string}) {
     }, [id]);
 
     if (status === "loading") {
-        return <RecipePlaceholder />;
+        return <Loader/>;
     } else if (status === "failed") {
-        return <RecipeLoadFailure err={err} />;
+        return <LoadFailure err={err} />;
     } else if (status === "success") {
         if (data === undefined) {
             throw new Error("Undefined data after status success");

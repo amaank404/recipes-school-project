@@ -34,6 +34,7 @@ class Recipe:
             "name": self.name,
             "base": self.base,
             "tags": self.tags,
+            "date_added": to_datetime_str(self.date_added),
         }
 
     def as_recipe_data(self, url_base):

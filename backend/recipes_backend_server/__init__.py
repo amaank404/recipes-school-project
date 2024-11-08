@@ -5,6 +5,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request, send_from_directory, Response
 from flask_cors import CORS
+import traceback
 
 load_dotenv()
 
@@ -24,12 +25,17 @@ recipes_db = db.recipes_db
 def handle_exception(e):
     """Return JSON instead of HTML for HTTP errors."""
     # start with the correct headers and status code from the error
+
+    try:
+        raise e
+    except Exception:
+        print(traceback.format_exc())
+
     try:
         response = e.get_response()
     except:
         response = Response(status=500)
 
-    # raise e
     # replace the body with JSON
     response.data = json.dumps(
         {
@@ -54,7 +60,7 @@ def get_category(category):
     return jsonify([x.as_recipe("/api/v1/images/{fname}") for x in recipes])
 
 
-@app.route("/api/v1/recipes/content/<int:id>")
+@app.route("/api/v1/recipes/get/<int:id>")
 def get_recipe(id):
     resp = recipes_db.get_recipe(id)
     return jsonify(resp)

@@ -3,6 +3,7 @@ import { PyAPIRepository } from "./pyapi_repository";
 import { Recipe, RecipeData } from "./types";
 
 const repository = new PyAPIRepository("http://localhost:9422");
+// const repository = new DummyRepository();
 
 export async function get_list(category: string): Promise<Recipe[]> {
     return repository.get_list(category);

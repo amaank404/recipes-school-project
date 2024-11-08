@@ -9,7 +9,7 @@ export default function RecipeItem (
 ) {
     let router = useRouter();
 
-    return <span onClick={() => router.push(`/recipe?id=${id}`)}>
+    return <span onClick={() => router.push(`/app/recipe?id=${id}`)}>
     <div className="shadow-sm rounded-md overflow-hidden w-48 p-1.5 bg-white mb-1 group cursor-pointer"> 
         <Image src={image_url} alt="recipe image" width={300} height={200} className="w-full h-24 rounded-md object-cover"/>
         <div className="group-hover:underline">{name}</div>

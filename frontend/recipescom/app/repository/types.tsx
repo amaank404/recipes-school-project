@@ -1,17 +1,18 @@
-export type Recipe = {
+export interface Recipe {
     id: string,
     image_url: string,
     name: string,
     base: string,
     tags: string[],
+    date_added?: string
 }
 
-export type RecipeData = {
+export interface RecipeData {
     recipe: Recipe,
     content: string,
 }
 
-export type APIError = {
+export interface APIError {
     code: number,
     error: string,
     msg: string

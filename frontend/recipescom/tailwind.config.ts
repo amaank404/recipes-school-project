@@ -22,5 +22,19 @@ const config: Config = {
     },
   },
   plugins: [],
+  safelist: [
+    {
+      pattern: /bg-.+-(100|500|800)/,
+      variants: ["hover", "active"]
+    },
+    {
+      pattern: /text-.+-500/
+    },
+    "text-white",
+    {
+      pattern: /ring-.+-800/,
+      variants: ["active"]
+    }
+  ]
 };
 export default config;
