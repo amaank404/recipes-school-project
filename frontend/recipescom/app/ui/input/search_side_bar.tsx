@@ -25,11 +25,11 @@ export default function SearchSideBar({onData}: {onData?: (data: SearchData) => 
     });
 
     function setDataParam(prop: string, val: any) {
-        setData((data) => {
-            let d = structuredClone(data);
-            d[prop] = val;
-            return d;
-        });
+        let d = structuredClone(data);
+        d[prop] = val;
+
+        onData?.(d);
+        setData(d);
     }
 
     return <div className="bg-slate-100 w-full lg:w-72 lg:min-h-screen h-full p-5 flex flex-col items-center flex-shrink-0 group">

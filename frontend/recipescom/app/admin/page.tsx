@@ -1,13 +1,65 @@
 'use client';
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Button from "../ui/input/button";
-import SearchSideBar from "../ui/input/search_side_bar";
+import SearchSideBar, { SearchData } from "../ui/input/search_side_bar";
 import Popup from "../ui/popup";
 import TableView from "../ui/table_view";
+import EditView from "./editview";
+import { search } from "../repository/repository";
+import { Recipe, SearchParams } from "../repository/types";
+import Loader from "../ui/loader";
+import LoadFailure from "../ui/load_failure";
+
+export function RecipeTableLoader({className, onData, query}: {className?: string, onData?: (recipes: Recipe[]) => void, query: SearchParams}) {
+    let [data, setData] = useState<Recipe[]>();
+    let [state, setState] = useState("loading");
+    let [err, setErr] = useState("");
+    const currentQuery = useRef(query);
+    
+    if (currentQuery.current !== query) {
+        setState("loading");
+        currentQuery.current = query;
+    }
+
+    useEffect(() => {
+        search(query).then(data => {
+            setData(data);
+            setState("success");
+        }).catch(e => {
+            setErr(e.message);
+            setState("error");
+        })
+    }, [state])
+
+    if (state === "loading") {
+        return <Loader className={className} nobackbutton/>
+    } else if (state === "success") {
+        return <TableView className={className} data={data as Recipe[]}/>
+    } else if (state === "error") {
+        return <LoadFailure err={err} className={className} nobackbutton/>
+    }
+}
 
 export default function Admin() {
-    let [popup, setPopup] = useState();
+    let [id, setId] = useState<string | null>(null);
+    let [searchData, setSearchData] = useState<SearchData>();
+
+    let query: SearchParams = {
+        query: []
+    }
+
+    if (searchData) {
+        let catArr = [];
+        for (let x of searchData.categories) {
+            catArr.push(x.toLowerCase());
+        }
+
+
+        if (catArr.length) query.query.push(["contains", "recipes.base", ...catArr]);
+        if (searchData.tags.size) query.query.push(["contains", "tags.tag", ...searchData.tags]);
+        if (searchData.search.trim().length) query.query.push(["search", "recipes.name", searchData.search.trim()]);
+    }
 
     function addRecipe() {
 
@@ -22,8 +74,8 @@ export default function Admin() {
     }
 
     return <div className="flex max-lg:flex-col">
-        <SearchSideBar/>
-        <div className="flex flex-col items-center w-full">
+        <SearchSideBar onData={d => setSearchData(d)}/>
+        <div className="flex flex-col items-center min-w-0 w-full">
             <h1 className="text-4xl font-semibold text-slate-700 mt-4">Admin</h1>
             <div className="w-full max-lg:px-5 py-10 px-20">
                 <div className="flex justify-between w-full">
@@ -33,8 +85,14 @@ export default function Admin() {
                     </div>
                     <Button label="Edit" color="pink" onClick={editRecipe}/>
                 </div>
-                <TableView className="mt-3"/>
+                <RecipeTableLoader className="mt-4 max-w-full" query={query}/>
             </div>
+
+            {id !== null ? 
+            <Popup>
+                <EditView id={id}/> 
+            </Popup>
+            : ""}
         </div>
     </div>
 }

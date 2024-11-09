@@ -1,6 +1,6 @@
 from flask import Blueprint, request
 from ..db import recipes_db
-from ..types import *
+from ..dtypes import *
 
 admin = Blueprint("admin", __name__)
 

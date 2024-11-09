@@ -18,6 +18,10 @@ export interface APIError {
     msg: string
 }
 
+export interface SearchParams {
+    query: (string | number)[][]
+}
+
 export function isRecipe(obj: any): obj is Recipe {
     return (
         obj.id !== undefined &&

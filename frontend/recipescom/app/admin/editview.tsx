@@ -6,7 +6,7 @@ import { get_recipe } from "../repository/repository";
 import Loader from "../ui/loader";
 import LoadFailure from "../ui/load_failure";
 
-export default function EditView({id}: {id: string}) {
+export default function EditView({id, className, nobackbutton}: {id: string, className?: string, nobackbutton?: boolean}) {
     const [data, setData] = useState<RecipeData>();
     const [state, setState] = useState("loading");
     const [err, setError] = useState("");
@@ -29,10 +29,10 @@ export default function EditView({id}: {id: string}) {
     }, []);
 
     if (state == "loading") {
-        return <Loader/>
+        return <Loader className={className} nobackbutton={nobackbutton}/>
     } else if (state == "success") {
-        return <div></div>
+        return <div className={className || "w-full h-full"}></div>
     } else {
-        return <LoadFailure err={err}/>
+        return <LoadFailure err={err} className={className} nobackbutton={nobackbutton}/>
     }
 }

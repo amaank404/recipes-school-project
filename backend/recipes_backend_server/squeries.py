@@ -54,8 +54,10 @@ class SearchQuery:
         self._between: list[tuple[str, int | float, int | float]] = []
         self._ops: list[tuple[str, int | float, str]] = []
         self._order_by: list[tuple[str, str]] = []
+        self._contains: list[tuple[str, list[str]]] = []
         self._limit = None
         self._offset = None
+        self._distinct: bool = False
 
     def table(self, table: str) -> Self:
         assert _checkcol(table)
@@ -117,16 +119,27 @@ class SearchQuery:
         self._offset = offset
         return self
 
+    def contains(self, column: str, *st) -> Self:
+        self._contains.append(column, st)
+        return self
+
     def _prepend_col(self, col: str) -> str:
         if "." in col:
             return col
         else:
             return f"{self._table}.{col}"
 
+    def distinct(self, distinct: bool = True) -> Self:
+        self._distinct = distinct
+        return self
+
     def build(self) -> str:
         assert self._table is not None
 
         query = ["SELECT"]
+
+        if self._distinct:
+            query.append("DISTINCT")
 
         assert all(map(_checkcol, self._columns))
 
@@ -169,8 +182,17 @@ class SearchQuery:
             assert _checkcol(col)
             assert isinstance(p, str)
             col = self._prepend_col(col)
-            query.append(f"({col} LIKE {_search_query(p)} ESCAPE '\\')")
+            query.append(f"(LOWER({col}) LIKE {_search_query(p.lower())} ESCAPE '\\')")
             query.append("AND")
+
+        for col, p in self._contains:
+            assert _checkcol(col)
+            assert isinstance(p, list)
+            for x in p:
+                assert isinstance(x, (int, float, str))
+            col = self._prepend_col(col)
+            query.append(f"({col} IN ({', '.join(map(_escape, p))}))")
+            query.append(f"AND")
 
         query.pop()
 

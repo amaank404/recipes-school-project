@@ -3,7 +3,7 @@ from flask.logging import default_handler
 from pymysql import connect, Connection
 import pymysqlpool
 from .db_migrations import migrate
-from .types import *
+from .dtypes import *
 from .dbutil import *
 from .squeries import SearchQuery
 import os
@@ -248,6 +248,7 @@ CREATE TABLE IF NOT EXISTS metadata (
             .columns("id", "name", "base", "date_added", "image_file")
             .limit(page_limit)
             .offset(page_limit * page)
+            .distinct()
             .build()
         )
 
