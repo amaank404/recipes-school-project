@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 import Button from "../ui/input/button";
 import SearchSideBar, { SearchData } from "../ui/input/search_side_bar";
 import Popup from "../ui/popup";
@@ -10,14 +10,15 @@ import { search } from "../repository/repository";
 import { Recipe, SearchParams } from "../repository/types";
 import Loader from "../ui/loader";
 import LoadFailure from "../ui/load_failure";
+import _ from "lodash";
 
-export function RecipeTableLoader({className, onData, query}: {className?: string, onData?: (recipes: Recipe[]) => void, query: SearchParams}) {
+function RecipeTableLoader({className, onData, query}: {className?: string, onData?: (recipes: string[]) => void, query: SearchParams}) {
     let [data, setData] = useState<Recipe[]>();
     let [state, setState] = useState("loading");
     let [err, setErr] = useState("");
     const currentQuery = useRef(query);
     
-    if (currentQuery.current !== query) {
+    if (!_.isEqual(currentQuery.current, query)) {
         setState("loading");
         currentQuery.current = query;
     }
@@ -35,7 +36,7 @@ export function RecipeTableLoader({className, onData, query}: {className?: strin
     if (state === "loading") {
         return <Loader className={className} nobackbutton/>
     } else if (state === "success") {
-        return <TableView className={className} data={data as Recipe[]}/>
+        return <TableView className={className} data={data as Recipe[]} onData={onData}/>
     } else if (state === "error") {
         return <LoadFailure err={err} className={className} nobackbutton/>
     }
@@ -44,6 +45,7 @@ export function RecipeTableLoader({className, onData, query}: {className?: strin
 export default function Admin() {
     let [id, setId] = useState<string | null>(null);
     let [searchData, setSearchData] = useState<SearchData>();
+    let [select, setSelect] = useState<string[]>([]);
 
     let query: SearchParams = {
         query: []
@@ -61,16 +63,20 @@ export default function Admin() {
         if (searchData.search.trim().length) query.query.push(["search", "recipes.name", searchData.search.trim()]);
     }
 
-    function addRecipe() {
+    const setSelectData = useCallback((d: string[]) => {
+        setSelect(d);
+    }, []);
 
+    function addRecipe() {
+        setId("new");
     }
 
     function deleteRecipe() {
-
+        console.error("Deletion not implemented yet");
     }
 
     function editRecipe() {
-
+        setId(select[0]);
     }
 
     return <div className="flex max-lg:flex-col">
@@ -80,17 +86,17 @@ export default function Admin() {
             <div className="w-full max-lg:px-5 py-10 px-20">
                 <div className="flex justify-between w-full">
                     <div className="flex gap-2">
-                        <Button label="Delete" color="red" onClick={deleteRecipe}/>
+                        <Button label="Delete" color="red" onClick={deleteRecipe} disabled={select.length === 0}/>
                         <Button label="Add" color="green" onClick={addRecipe}/>
                     </div>
-                    <Button label="Edit" color="pink" onClick={editRecipe}/>
+                    <Button label="Edit" color="pink" onClick={editRecipe} disabled={select.length !== 1}/>
                 </div>
-                <RecipeTableLoader className="mt-4 max-w-full" query={query}/>
+                <RecipeTableLoader className="mt-4 max-w-full" query={query} onData={setSelectData}/>
             </div>
 
             {id !== null ? 
             <Popup>
-                <EditView id={id}/> 
+                <EditView id={id} onClose={() => setId(null)} nobackbutton className="h-96 w-96 bg-white p-3 rounded-md"/> 
             </Popup>
             : ""}
         </div>

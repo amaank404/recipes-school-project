@@ -27,16 +27,21 @@ export default function TableView({className, data, onData}: {className?: string
     let [checkedItems, setCheckedItems] = useState<string[]>([]);
     
     const setAll = (v: boolean) => {
-        setCheckedItems(v ? data.map(recipe => recipe.id) : []);
-        onData?.(checkedItems);
+        const q = v ? data.map(recipe => recipe.id) : [];
+        setCheckedItems(q);
+        onData?.(q);
     }
 
     const setCheck = (id: string, v: boolean) => {
+        let q: string[] = []
         if (v) {
-            setCheckedItems([...checkedItems, id])
+            q = [...checkedItems, id];
+            setCheckedItems(q)
         } else {
-            setCheckedItems(checkedItems.filter(item => item !== id));
+            q = checkedItems.filter(item => item !== id);
+            setCheckedItems(q);
         }
+        onData?.(q);
     }
 
     let rows = data.map(
