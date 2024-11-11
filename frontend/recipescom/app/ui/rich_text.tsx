@@ -5,16 +5,19 @@ export default function RichText({
   children,
   classList,
   variableSize,
+  fontSize,
 }: {
   children: string;
   classList?: string;
   variableSize?: boolean;
+  fontSize?: number;
 }) {
   return (
-    <div className={classList}>
-      <Markdown
-        className={`${styles.richText} ${variableSize ? styles.varSize : ""}`}
-      >
+    <div
+      className={classList + ` ${styles.richText}`}
+      style={{ fontSize: fontSize }}
+    >
+      <Markdown className={`${variableSize ? styles.varSize : ""}`}>
         {children}
       </Markdown>
     </div>

@@ -1,3 +1,4 @@
+import { ApiError } from "next/dist/server/api-utils";
 import { DummyRepository } from "./dummy";
 import { PyAPIRepository } from "./pyapi_repository";
 import { Recipe, RecipeData, SearchParams } from "./types";
@@ -15,4 +16,8 @@ export async function get_recipe(id: string): Promise<RecipeData> {
 
 export async function search(search: SearchParams): Promise<Recipe[]> {
   return repository.search(search);
+}
+
+export async function save_recipe(recipe: RecipeData): Promise<void> {
+  return repository.save_recipe(recipe);
 }

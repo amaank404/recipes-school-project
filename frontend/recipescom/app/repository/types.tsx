@@ -55,8 +55,22 @@ export function checkType(obj: any, type_checker: (arg0: any) => boolean) {
       "Object of incorrect type: ",
       obj,
       "had type checker",
-      type_checker,
+      type_checker
     );
     throw new Error("Runtime Type Check failed");
   }
+}
+
+export function genEmptyRecipeData(): RecipeData {
+  return {
+    content: "",
+    recipe: {
+      id: "",
+      image_url: "",
+      name: "",
+      base: "",
+      tags: [],
+      date_added: "",
+    },
+  };
 }

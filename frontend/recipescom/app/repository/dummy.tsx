@@ -4,7 +4,7 @@ export class DummyRepository {
   async get_list(
     cagegory: string,
     page_limit: number = 0,
-    page: number = 0,
+    page: number = 0
   ): Promise<Recipe[]> {
     // await new Promise(resolve => setTimeout(resolve, 2000));
     switch (cagegory) {
@@ -157,5 +157,9 @@ export class DummyRepository {
         tags: ["Italian", "Advanced"],
       },
     ];
+  }
+
+  async save_recipe(recipe: RecipeData) {
+    alert("Save Recipe for dummy data not implemented");
   }
 }

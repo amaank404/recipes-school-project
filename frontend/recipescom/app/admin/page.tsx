@@ -32,6 +32,8 @@ function RecipeTableLoader({
   }
 
   useEffect(() => {
+    if (state !== "success") onData?.([]);
+
     search(query)
       .then((data) => {
         setData(data);
@@ -133,7 +135,7 @@ export default function Admin() {
               id={id}
               onClose={() => setId(null)}
               nobackbutton
-              className="h-full max-h-[600px] w-full max-w-screen-lg bg-white p-3 rounded-md m-6"
+              className="w-full max-w-screen-lg bg-white p-3 rounded-md m-6"
             />
           </Popup>
         ) : (
