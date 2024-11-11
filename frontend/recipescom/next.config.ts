@@ -6,15 +6,15 @@ const nextConfig: NextConfig = {
       {
         source: "/",
         destination: "/app",
-        permanent: false
+        permanent: false,
       },
       {
         source: "/app",
         destination: "/app/homepage",
-        permanent: false
-      }
-    ]
-  }
+        permanent: false,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

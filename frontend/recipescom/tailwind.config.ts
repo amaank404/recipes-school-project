@@ -8,10 +8,10 @@ const config: Config = {
   ],
   theme: {
     screens: {
-      'sm': "500px",
-      "md": "700px",
-      "lg": "900px",
-      "xl": "1200px",
+      sm: "500px",
+      md: "700px",
+      lg: "900px",
+      xl: "1200px",
       "2xl": "1500px",
     },
     extend: {
@@ -25,16 +25,16 @@ const config: Config = {
   safelist: [
     {
       pattern: /^bg-.+-(100|500|800)$/,
-      variants: ["hover", "active"]
+      variants: ["hover", "active"],
     },
     {
-      pattern: /^text-.+-500$/
+      pattern: /^text-.+-500$/,
     },
     "text-white",
     {
       pattern: /^ring-.+-800$/,
-      variants: ["active"]
-    }
-  ]
+      variants: ["active"],
+    },
+  ],
 };
 export default config;

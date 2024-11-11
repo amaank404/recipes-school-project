@@ -13,7 +13,7 @@ export default function RootLayout({
     <html lang="en">
       <body className="antialiased bg-slate-50 min-h-screen relative">
         {children}
-        <CopyrightNoticeFooter/>
+        <CopyrightNoticeFooter />
       </body>
     </html>
   );

@@ -1,13 +1,13 @@
 @tailwind utilities;
 
 @layer utilities {
-    .text_stroke_white {
-        -webkit-text-fill-color: transparent;
-        -webkit-text-stroke-width: 1px;
-        -webkit-text-stroke-color: white;
-    }
+  .text_stroke_white {
+    -webkit-text-fill-color: transparent;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: white;
+  }
 
-    .text_stroke_2px {
-        -webkit-text-stroke-width: 2px;
-    }
+  .text_stroke_2px {
+    -webkit-text-stroke-width: 2px;
+  }
 }

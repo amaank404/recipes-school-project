@@ -1,89 +1,93 @@
 import { Recipe, RecipeData, SearchParams } from "./types";
 
 export class DummyRepository {
-    async get_list(cagegory: string, page_limit: number = 0, page: number = 0): Promise<Recipe[]> {
-        // await new Promise(resolve => setTimeout(resolve, 2000));
-        switch (cagegory) {
-            case "top_desc":
-                return [
-                    {
-                        id: "c12",
-                        image_url: "/images/chowmein.webp",
-                        name: "Tadka Chowmein",
-                        base: "chowmein",
-                        tags: ["Chinese", "Easy"],
-                    },
-                    {
-                        id: "c122",
-                        image_url: "/images/carbonara.jpg",
-                        name: "Carbonara",
-                        base: "pasta",
-                        tags: ["Italian", "Advanced"],
-                    },
-                    {
-                        id: "c22",
-                        image_url: "/images/egg_fried_rice.jpg",
-                        name: "Egg Fried Rice",
-                        base: "rice",
-                        tags: ["Chinese", "Easy", "Make-at-Home"],
-                    },
-                    {
-                        id: "c23",
-                        image_url: "/images/apple_pecan_salad.jpg",
-                        name: "Apple Pecan Salad",
-                        base: "salad",
-                        tags: ["Healthy", "Easy"],
-                    },
-                    {
-                        id: "cas2",
-                        image_url: "/images/alfredo.jpg",
-                        name: "Alfredo",
-                        base: "pasta",
-                        tags: ["Italian", "Advanced"],
-                    },
-                ];
-            case "tag_Easy_date-added_desc":
-                return [
-                    {
-                        id: "c23",
-                        image_url: "/images/apple_pecan_salad.jpg",
-                        name: "Apple Pecan Salad",
-                        base: "salad",
-                        tags: ["Healthy", "Easy"],
-                    },
-                    {
-                        id: "c12",
-                        image_url: "/images/chowmein.webp",
-                        name: "Tadka Chowmein",
-                        base: "chowmein",
-                        tags: ["Chinese", "Easy"],
-                    },
-                    {
-                        id: "c22",
-                        image_url: "/images/egg_fried_rice.jpg",
-                        name: "Egg Fried Rice",
-                        base: "rice",
-                        tags: ["Chinese", "Easy", "Make-at-Home"],
-                    },
-                ];
-        }
-
-        throw new Error("Category not found");
+  async get_list(
+    cagegory: string,
+    page_limit: number = 0,
+    page: number = 0,
+  ): Promise<Recipe[]> {
+    // await new Promise(resolve => setTimeout(resolve, 2000));
+    switch (cagegory) {
+      case "top_desc":
+        return [
+          {
+            id: "c12",
+            image_url: "/images/chowmein.webp",
+            name: "Tadka Chowmein",
+            base: "chowmein",
+            tags: ["Chinese", "Easy"],
+          },
+          {
+            id: "c122",
+            image_url: "/images/carbonara.jpg",
+            name: "Carbonara",
+            base: "pasta",
+            tags: ["Italian", "Advanced"],
+          },
+          {
+            id: "c22",
+            image_url: "/images/egg_fried_rice.jpg",
+            name: "Egg Fried Rice",
+            base: "rice",
+            tags: ["Chinese", "Easy", "Make-at-Home"],
+          },
+          {
+            id: "c23",
+            image_url: "/images/apple_pecan_salad.jpg",
+            name: "Apple Pecan Salad",
+            base: "salad",
+            tags: ["Healthy", "Easy"],
+          },
+          {
+            id: "cas2",
+            image_url: "/images/alfredo.jpg",
+            name: "Alfredo",
+            base: "pasta",
+            tags: ["Italian", "Advanced"],
+          },
+        ];
+      case "tag_Easy_date-added_desc":
+        return [
+          {
+            id: "c23",
+            image_url: "/images/apple_pecan_salad.jpg",
+            name: "Apple Pecan Salad",
+            base: "salad",
+            tags: ["Healthy", "Easy"],
+          },
+          {
+            id: "c12",
+            image_url: "/images/chowmein.webp",
+            name: "Tadka Chowmein",
+            base: "chowmein",
+            tags: ["Chinese", "Easy"],
+          },
+          {
+            id: "c22",
+            image_url: "/images/egg_fried_rice.jpg",
+            name: "Egg Fried Rice",
+            base: "rice",
+            tags: ["Chinese", "Easy", "Make-at-Home"],
+          },
+        ];
     }
 
-    async get_recipe(id: string): Promise<RecipeData> {
-        // await new Promise(resolve => setTimeout(resolve, 2000));
-        switch (id) {
-            case "c122":
-                return {
-                    recipe: {
-                        id: "c122",
-                        image_url: "/images/carbonara.jpg",
-                        name: "Carbonara", // from the Italian Village of Pisa",
-                        base: "pasta",
-                        tags: ["Italian", "Advanced"]
-                    },
-                    content: `
+    throw new Error("Category not found");
+  }
+
+  async get_recipe(id: string): Promise<RecipeData> {
+    // await new Promise(resolve => setTimeout(resolve, 2000));
+    switch (id) {
+      case "c122":
+        return {
+          recipe: {
+            id: "c122",
+            image_url: "/images/carbonara.jpg",
+            name: "Carbonara", // from the Italian Village of Pisa",
+            base: "pasta",
+            tags: ["Italian", "Advanced"],
+          },
+          content: `
 # Ingredients:
 
 * 1 pound spaghetti
@@ -107,51 +111,51 @@ export class DummyRepository {
 **Finish the dish:** Add the rendered guanciale and the reserved pasta water to the pasta mixture. Toss quickly until the sauce is creamy and coats the pasta. Season with salt and pepper to taste.
 
 **Serve immediately:** Serve the Carbonara hot with additional grated Pecorino Romano cheese, if desired.
-`
-                }
-        }
-
-        throw new Error("Recipe not found");
+`,
+        };
     }
 
-    async search(s: SearchParams): Promise<Recipe[]> {
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        return [
-            {
-                id: "c12",
-                image_url: "/images/chowmein.webp",
-                name: "Tadka Chowmein",
-                base: "chowmein",
-                tags: ["Chinese", "Easy"],
-            },
-            {
-                id: "c122",
-                image_url: "/images/carbonara.jpg",
-                name: "Carbonara",
-                base: "pasta",
-                tags: ["Italian", "Advanced"],
-            },
-            {
-                id: "c22",
-                image_url: "/images/egg_fried_rice.jpg",
-                name: "Egg Fried Rice",
-                base: "rice",
-                tags: ["Chinese", "Easy", "Make-at-Home"],
-            },
-            {
-                id: "c23",
-                image_url: "/images/apple_pecan_salad.jpg",
-                name: "Apple Pecan Salad",
-                base: "salad",
-                tags: ["Healthy", "Easy"],
-            },
-            {
-                id: "cas2",
-                image_url: "/images/alfredo.jpg",
-                name: "Alfredo",
-                base: "pasta",
-                tags: ["Italian", "Advanced"],
-            },
-        ];
-    }
+    throw new Error("Recipe not found");
+  }
+
+  async search(s: SearchParams): Promise<Recipe[]> {
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    return [
+      {
+        id: "c12",
+        image_url: "/images/chowmein.webp",
+        name: "Tadka Chowmein",
+        base: "chowmein",
+        tags: ["Chinese", "Easy"],
+      },
+      {
+        id: "c122",
+        image_url: "/images/carbonara.jpg",
+        name: "Carbonara",
+        base: "pasta",
+        tags: ["Italian", "Advanced"],
+      },
+      {
+        id: "c22",
+        image_url: "/images/egg_fried_rice.jpg",
+        name: "Egg Fried Rice",
+        base: "rice",
+        tags: ["Chinese", "Easy", "Make-at-Home"],
+      },
+      {
+        id: "c23",
+        image_url: "/images/apple_pecan_salad.jpg",
+        name: "Apple Pecan Salad",
+        base: "salad",
+        tags: ["Healthy", "Easy"],
+      },
+      {
+        id: "cas2",
+        image_url: "/images/alfredo.jpg",
+        name: "Alfredo",
+        base: "pasta",
+        tags: ["Italian", "Advanced"],
+      },
+    ];
+  }
 }

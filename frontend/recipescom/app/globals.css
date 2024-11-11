@@ -5,27 +5,27 @@
 @layer utilities {
   /* Hide scrollbar for Chrome, Safari and Opera */
   .no-scrollbar::-webkit-scrollbar {
-      display: none;
+    display: none;
   }
- /* Hide scrollbar for IE, Edge and Firefox */
+  /* Hide scrollbar for IE, Edge and Firefox */
   .no-scrollbar {
-      -ms-overflow-style: none;  /* IE and Edge */
-      scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
   }
 }
 
 @font-face {
-    font-family: "MaterialSymbols";
-    src: url("/fonts/MaterialSymbolsRounded_28pt-Regular.ttf");
+  font-family: "MaterialSymbols";
+  src: url("/fonts/MaterialSymbolsRounded_28pt-Regular.ttf");
 }
 
 .material-symbols-rounded {
   font-family: "MaterialSymbols";
   font-variation-settings:
-  'FILL' 0,
-  'wght' 400,
-  'GRAD' 0,
-  'opsz' 24
+    "FILL" 0,
+    "wght" 400,
+    "GRAD" 0,
+    "opsz" 24;
 }
 
 :root {

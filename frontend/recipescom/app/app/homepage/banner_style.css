@@ -1,18 +1,18 @@
 .banner-bg {
-    position: relative;
+  position: relative;
 }
 
 .banner-bg::before {
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: -1;
-    content: '';
-    position: absolute;
-    background: url("/banner.avif");
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: cover;
-    filter: brightness(0.8);
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: -1;
+  content: "";
+  position: absolute;
+  background: url("/banner.avif");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  filter: brightness(0.8);
 }
