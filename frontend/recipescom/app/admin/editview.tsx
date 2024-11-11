@@ -62,12 +62,18 @@ export default function EditView({
   useEffect(() => {
     if (state !== "success") return;
 
-    const i = setInterval(() => {
-      // Check if the new content is different
-      if (prevRecipeContents.current != previewContent) {
-        setPreviewContent(prevRecipeContents.current);
-      }
-    }, 2000);
+    updateRecipeContent(data.content);
+
+    const i = setInterval(
+      (function m() {
+        // Check if the new content is different
+        if (prevRecipeContents.current != previewContent) {
+          setPreviewContent(prevRecipeContents.current);
+        }
+        return m;
+      })(),
+      2000
+    );
 
     return () => clearInterval(i);
   }, [state]);
@@ -126,6 +132,7 @@ export default function EditView({
                 className="mt-7"
                 multiline
                 onChange={(evt) => updateRecipeContent(evt.target.value)}
+                initVal={data.content}
               />
             </div>
             <div className="flex mt-5 justify-between">
