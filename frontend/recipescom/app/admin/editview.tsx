@@ -11,6 +11,7 @@ import OutlinedInput from "../ui/input/outlined_input";
 import RichText from "../ui/rich_text";
 import Button from "../ui/input/button";
 import _ from "lodash";
+import ImageInput from "../ui/input/image_input";
 
 export default function EditView({
   id,
@@ -111,7 +112,11 @@ export default function EditView({
         <div className="flex max-md:flex-col max-h-[90vh] no-scrollbar overflow-y-auto p-3 gap-8">
           <div className="w-full flex flex-col justify-between">
             <div>
-              <div className="bg-gray-300 w-full h-56 rounded-md"></div>
+              {/* <div className="bg-gray-300 w-full h-56 rounded-md"></div> */}
+              <ImageInput
+                className="w-full h-56"
+                prefetchData={data.recipe.image_url || undefined}
+              />
               <OutlinedInput
                 placeholder="Recipe Name"
                 className="mt-7"
