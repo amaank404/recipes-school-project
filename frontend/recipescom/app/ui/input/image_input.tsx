@@ -6,9 +6,11 @@ import { ChangeEvent, use, useCallback, useEffect, useState } from "react";
 export default function ImageInput({
   className,
   prefetchData,
+  onFileChange,
 }: {
   className?: string;
   prefetchData?: string;
+  onFileChange?: (data: string) => void;
 }) {
   const [preview, setPreview] = useState<string>();
 
@@ -33,7 +35,9 @@ export default function ImageInput({
           resolve(reader.result as string | undefined);
         };
 
-        // TODO: hook up reject to reader.onerror somehow and try it
+        reader.onerror = function () {
+          alert("Unable to read image file");
+        };
 
         reader.readAsDataURL(b);
       });
@@ -50,6 +54,10 @@ export default function ImageInput({
       fetch_and_set(prefetchData);
     }
   }, [prefetchData]);
+
+  useEffect(() => {
+    onFileChange?.(preview || "");
+  }, [preview]);
 
   return (
     <div className={className}>

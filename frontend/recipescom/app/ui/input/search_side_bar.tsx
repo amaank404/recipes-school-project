@@ -1,7 +1,10 @@
-import { useState } from "react";
+"use client";
+
+import { useEffect, useState } from "react";
 import CategorySelector from "./category_selector";
 import Search from "./search";
 import TagSelectors from "./tag_select";
+import { get_all_categories, get_all_tags } from "@/app/repository/repository";
 
 function SideBarHeading({ children }: { children?: React.ReactNode }) {
   return <div className="text-slate-600 mt-4 text-xl mb-2">{children}</div>;
@@ -19,20 +22,22 @@ export default function SearchSideBar({
 }: {
   onData?: (data: SearchData) => any;
 }) {
-  const tags = [
-    "Easy",
-    "Hard",
-    "Italian",
-    "Advanced",
-    "Make-it-at-Home",
-    "Chinese",
-    "Rice",
-    "Chowmein",
-    "Indian",
-    "Asian",
-    "5-mins",
-  ];
-  const cats = ["Pasta", "Chowmein", "Chinese", "Salads", "Idli", "Dosa"];
+  const [tags, setTags] = useState<string[]>([]);
+  const [cats, setCats] = useState<string[]>([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      const tags_promise = get_all_tags();
+      const cats_promise = get_all_categories();
+
+      const [tags1, cats1] = await Promise.all([tags_promise, cats_promise]);
+
+      setTags(tags1);
+      setCats(cats1);
+    }
+
+    fetchData();
+  }, []);
 
   let [data, setData] = useState<SearchData>({
     search: "",

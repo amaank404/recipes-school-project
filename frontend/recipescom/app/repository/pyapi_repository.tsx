@@ -5,8 +5,10 @@ import {
   checkType,
   isAPIError,
   isRecipe,
+  isRecipeData,
   Recipe,
   RecipeData,
+  SearchParams,
 } from "./types";
 
 export class PyAPIRepository {
@@ -33,7 +35,68 @@ export class PyAPIRepository {
       await fetch(this.api_base + "/api/v1/recipes/get/" + id)
     ).json();
     checkAPIError(response);
-    checkType(response, isRecipe);
+    checkType(response, isRecipeData);
+
+    return response;
+  }
+
+  async search(s: SearchParams): Promise<Recipe[]> {
+    let response = await (
+      await fetch(this.api_base + "/api/v1/recipes/search", {
+        method: "POST",
+        body: JSON.stringify(s),
+        headers: { "Content-Type": "application/json" },
+      })
+    ).json();
+
+    checkAPIError(response);
+    for (let x of response) {
+      checkType(x, isRecipe);
+    }
+
+    return response;
+  }
+
+  async save_recipe(recipe: RecipeData) {
+    let formData = new FormData();
+
+    let recipeFinal = {
+      ...recipe.recipe,
+      image_url: "",
+      recipe: recipe.content,
+    };
+
+    const b = await fetch(recipe.recipe.image_url);
+
+    formData.append("recipe_data", JSON.stringify(recipeFinal));
+    formData.append("image", await b.blob(), "image");
+
+    let response = await (
+      await fetch(this.api_base + "/admin/recipes/add", {
+        method: "POST",
+        body: formData,
+      })
+    ).json();
+
+    checkAPIError(response);
+  }
+
+  async get_all_tags(): Promise<string[]> {
+    let response = await (
+      await fetch(this.api_base + "/api/v1/get_all_tags")
+    ).json();
+
+    checkAPIError(response);
+
+    return response;
+  }
+
+  async get_all_categories(): Promise<string[]> {
+    let response = await (
+      await fetch(this.api_base + "/api/v1/get_all_categories")
+    ).json();
+
+    checkAPIError(response);
 
     return response;
   }

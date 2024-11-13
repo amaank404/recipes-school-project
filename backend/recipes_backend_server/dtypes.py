@@ -46,7 +46,7 @@ class Recipe:
             id=data.get("id", -1),
             name=data["name"],
             base=data["base"],
-            image_file=data["image_url"],
+            image_file=data.get("image_url", ""),
             recipe=data.get("recipe"),
             tags=data["tags"],
         )

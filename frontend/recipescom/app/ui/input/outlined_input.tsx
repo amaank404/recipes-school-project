@@ -9,12 +9,14 @@ export default function OutlinedInput({
   multiline,
   initVal,
   onChange,
+  onBlur: onBlurCallback,
 }: {
   placeholder: string;
   className?: string;
   multiline?: boolean;
   initVal?: string;
   onChange?: (evt: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  onBlur?: (evt: FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
 }) {
   let v = initVal?.length;
   if (v === undefined) v = 0;
@@ -29,6 +31,8 @@ export default function OutlinedInput({
     const val = evt.target.value;
 
     setEmpty(val.length === 0);
+
+    onBlurCallback?.(evt);
   };
 
   const inputClassName =

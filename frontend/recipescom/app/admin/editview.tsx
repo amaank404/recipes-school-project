@@ -12,6 +12,7 @@ import RichText from "../ui/rich_text";
 import Button from "../ui/input/button";
 import _ from "lodash";
 import ImageInput from "../ui/input/image_input";
+import clsx from "clsx";
 
 export default function EditView({
   id,
@@ -38,6 +39,46 @@ export default function EditView({
     setData(d);
   };
 
+  const setRecipeParam = (t: string, newData: string) => {
+    switch (t) {
+      case "name":
+        setData({
+          content: data.content,
+          recipe: {
+            ...data.recipe,
+            name: newData,
+          },
+        });
+        break;
+      case "base":
+        setData({
+          content: data.content,
+          recipe: {
+            ...data.recipe,
+            base: newData,
+          },
+        });
+        break;
+      case "tags":
+        setData({
+          content: data.content,
+          recipe: {
+            ...data.recipe,
+            tags: newData.split(",").map((t) => t.trim()),
+          },
+        });
+        break;
+      case "image_url":
+        setData({
+          content: data.content,
+          recipe: {
+            ...data.recipe,
+            image_url: newData,
+          },
+        });
+    }
+  };
+
   // Data fetching
   useEffect(() => {
     if (state !== "loading") return;
@@ -53,10 +94,8 @@ export default function EditView({
           setState("error");
         });
     } else {
-      new Promise((resolve) => setTimeout(resolve, 2000)).then(() => {
-        setData(genEmptyRecipeData());
-        setState("success");
-      });
+      setData(genEmptyRecipeData());
+      setState("success");
     }
   }, []);
 
@@ -116,21 +155,27 @@ export default function EditView({
               <ImageInput
                 className="w-full h-56"
                 prefetchData={data.recipe.image_url || undefined}
+                onFileChange={(data_uri) =>
+                  setRecipeParam("image_url", data_uri)
+                }
               />
               <OutlinedInput
                 placeholder="Recipe Name"
                 className="mt-7"
                 initVal={data.recipe.name}
+                onBlur={(evt) => setRecipeParam("name", evt.target.value)}
               />
               <OutlinedInput
                 placeholder="Category"
                 className="mt-7"
                 initVal={data.recipe.base}
+                onBlur={(evt) => setRecipeParam("base", evt.target.value)}
               />
               <OutlinedInput
                 placeholder="Tags"
                 className="mt-7"
                 initVal={data.recipe.tags.join(", ")}
+                onBlur={(evt) => setRecipeParam("tags", evt.target.value)}
               />
               <OutlinedInput
                 placeholder="Contents"
@@ -147,10 +192,13 @@ export default function EditView({
           </div>
           <div className="w-full">
             <RichText
-              classList="max-md:h-96 overflow-y-auto h-full no-scrollbar"
+              classList={clsx(
+                "max-md:h-96 overflow-y-auto h-full no-scrollbar",
+                { "text-slate-400": previewContent.length == 0 }
+              )}
               fontSize={12}
             >
-              {previewContent}
+              {previewContent || "## Start Typing Content"}
             </RichText>
           </div>
         </div>

@@ -8,6 +8,12 @@
   margin-top: 0.5em;
 }
 
+.richText h2 {
+  font-size: 2em;
+  margin-bottom: 0.2em;
+  margin-top: 0.5em;
+}
+
 .richText ol {
   list-style-type: decimal;
 }

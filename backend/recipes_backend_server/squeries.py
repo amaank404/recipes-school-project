@@ -120,7 +120,7 @@ class SearchQuery:
         return self
 
     def contains(self, column: str, *st) -> Self:
-        self._contains.append(column, st)
+        self._contains.append((column, st))
         return self
 
     def _prepend_col(self, col: str) -> str:
@@ -187,7 +187,7 @@ class SearchQuery:
 
         for col, p in self._contains:
             assert _checkcol(col)
-            assert isinstance(p, list)
+            assert isinstance(p, (list, tuple))
             for x in p:
                 assert isinstance(x, (int, float, str))
             col = self._prepend_col(col)

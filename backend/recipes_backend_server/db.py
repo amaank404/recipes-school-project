@@ -60,6 +60,7 @@ class RecipesDB:
         "greater_eq",
         "lesser_eq",
         "not_equal",
+        "contains",
     }
 
     def __init__(self, connpool):
@@ -93,27 +94,6 @@ CREATE TABLE IF NOT EXISTS metadata (
             v = cur.fetchone()[0]
             return v
 
-    # Methods
-    def create_recipe(self, recipe: Recipe):
-        conn = self.connpool.get_connection()
-        with conn.cursor() as cur:
-            cur.execute(
-                "INSERT INTO recipes VALUES (%s,%s,%s,%s,%s,%s)",
-                (
-                    recipe.id,
-                    recipe.name,
-                    recipe.base,
-                    recipe.date_added.strftime("%Y-%m-%d %H:%M:%S"),
-                    recipe.image_file,
-                ),
-            )
-            cur.executemany(
-                "INSERT INTO tags VALUES (%s, %s)",
-                [(recipe.id, x) for x in recipe.tags],
-            )
-            conn.commit()
-        conn.close()
-
     def get_recipe(self, id: int, contents: bool = True) -> Recipe:
         conn = self.connpool.get_connection()
         with conn.cursor() as cur:
@@ -141,11 +121,11 @@ CREATE TABLE IF NOT EXISTS metadata (
             base=base,
             date_added=date_added,
             image_file=image_file,
-            recipe_content=recipe_content[0],
+            recipe=recipe_content[0],
             tags=tags,
         )
 
-    def add_recipe(self, recipe: Recipe) -> id:
+    def add_recipe(self, recipe: Recipe) -> int:
         """
         does not take recipe.id into account, id is auto generated and returned
         """
@@ -161,6 +141,24 @@ CREATE TABLE IF NOT EXISTS metadata (
                     recipe.recipe,
                 ),
             )
+
+            cur.execute(
+                "SELECT id FROM recipes WHERE name=%s AND base=%s AND date_added=%s",
+                (recipe.name, recipe.base, to_datetime_str(recipe.date_added)),
+            )
+
+            id = cur.fetchone()
+
+            cur.execute(
+                "INSERT INTO popularity(id, popularity) VALUES (%s, %s)", (id, 0)
+            )
+
+            cur.executemany(
+                "INSERT INTO tags VALUES (%s, %s)",
+                [(id, x) for x in recipe.tags],
+            )
+
+        conn.commit()
         conn.close()
 
     def _validate_order_type(self, order_by: str) -> str:
@@ -233,12 +231,30 @@ CREATE TABLE IF NOT EXISTS metadata (
 
         return d
 
+    def get_tags(self, id) -> list[str]:
+        with self.connpool.get_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute("SELECT tag FROM tags WHERE id=%s", (id,))
+                return [x[0] for x in cur.fetchall()]
+
+    def get_all_tags(self) -> list[str]:
+        with self.connpool.get_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute("SELECT DISTINCT tag FROM tags")
+                return [x[0] for x in cur.fetchall()]
+
+    def get_all_bases(self) -> list[str]:
+        with self.connpool.get_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute("SELECT DISTINCT base FROM recipes")
+                return [x[0] for x in cur.fetchall()]
+
     def search(self, query: list[str, str], page_limit: int = 10, page: int = 0):
         q = SearchQuery()
 
         for x, *params in query:
             if x not in self._allowed_search_fns:
-                raise TypeError(f"Invalid search function: {x}")
+                raise TypeError(f"Invalid search function: {x} in query: {query}")
             getattr(q, x)(*params)
 
         s = (
@@ -269,7 +285,8 @@ CREATE TABLE IF NOT EXISTS metadata (
                     name=name,
                     base=base,
                     image_file=image_file,
-                    date_added=to_datetime(date_added),
+                    date_added=date_added,
+                    tags=self.get_tags(id),
                 )
             )
         return d
