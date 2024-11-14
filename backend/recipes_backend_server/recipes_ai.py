@@ -111,4 +111,6 @@ def process_data(msg: str):
         else:
             buff += x + "\n"
 
+    sections.setdefault("CONCLUSION", buff)
+
     return sections
