@@ -1,28 +1,29 @@
-import { playfair_display, plus_jakarta_sans } from "@/app/ui/fonts";
-import "./banner_style.css";
-import NavBar from "@/app/ui/navbar";
-import RecipeSection from "@/app/ui/recipe_section";
 import { Metadata } from "next";
+import HomePageClient from "./page_client";
 
 export const metadata: Metadata = {
   title: "Recipes.com",
 };
 
+export const dynamic = "force-dynamic";
+
+function choose<T>(choices: T[]) {
+  var index = Math.floor(Math.random() * choices.length);
+  return choices[index];
+}
 export default function HomePage() {
-  return (
-    <div>
-      <NavBar />
-      <div className="h-[35vh] md:h-[50vh] w-full flex justify-center items-center banner-bg">
-        <div className="text-nowrap text-5xl md:text-6xl lg:text-8xl text-white">
-          <span className={`${playfair_display.className}`}>Recipes.</span>
-          <span className={`${plus_jakarta_sans.className}`}>com</span>
-        </div>
-      </div>
-      <div className="py-6 flex flex-col gap-5">
-        <RecipeSection title="Popular" fetch="top_desc" />
-        <RecipeSection title="Easy" fetch="tag_Easy_date-added_desc" />
-        <RecipeSection title="Not Found" fetch="not found" />
-      </div>
-    </div>
-  );
+  let banner_imgs = [
+    "beef.webp",
+    "1.jpg",
+    "2.webp",
+    "3.jpg",
+    "4.webp",
+    "6.webp",
+    "eggs.jpg",
+    "pasta.jpg",
+  ];
+
+  const banner_img = choose(banner_imgs);
+
+  return <HomePageClient img={banner_img} />;
 }

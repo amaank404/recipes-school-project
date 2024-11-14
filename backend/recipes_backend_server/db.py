@@ -45,7 +45,7 @@ CREATE DATABASE IF NOT EXISTS {database};
 conn.close()
 
 connpool = pymysqlpool.ConnectionPool(
-    size=5, maxsize=10, pre_create_num=5, name="pool1", **db_config
+    size=1, maxsize=1, pre_create_num=1, name="pool1", **db_config
 )
 
 
@@ -125,6 +125,14 @@ CREATE TABLE IF NOT EXISTS metadata (
             tags=tags,
         )
 
+    def increase_popularity(self, id):
+        with self.connpool.get_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    "UPDATE popularity SET popularity=(popularity+1) WHERE id=%s", (id,)
+                )
+            conn.commit()
+
     def add_recipe(self, recipe: Recipe) -> int:
         """
         does not take recipe.id into account, id is auto generated and returned
@@ -160,6 +168,31 @@ CREATE TABLE IF NOT EXISTS metadata (
 
         conn.commit()
         conn.close()
+
+    def update_recipe(self, recipe: Recipe) -> int:
+        with self.connpool.get_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    "UPDATE recipes SET name=%s, base=%s, date_added=%s, image_file=%s, recipe_content=%s WHERE id=%s",
+                    (
+                        recipe.name,
+                        recipe.base,
+                        to_datetime_str(recipe.date_added),
+                        recipe.image_file,
+                        recipe.recipe,
+                        int(recipe.id),
+                    ),
+                )
+
+                cur.execute("DELETE FROM tags WHERE id=%s", (int(recipe.id),))
+
+                cur.executemany(
+                    "INSERT INTO tags VALUES (%s, %s)",
+                    [(recipe.id, x) for x in recipe.tags],
+                )
+
+            conn.commit()
+        return recipe.id
 
     def _validate_order_type(self, order_by: str) -> str:
         valid_order_by_types = ("name", "base", "date_added")
@@ -225,13 +258,15 @@ CREATE TABLE IF NOT EXISTS metadata (
                     name=name,
                     base=base,
                     image_file=image_file,
-                    date_added=to_datetime(date_added),
+                    date_added=date_added,
+                    tags=self.get_tags(id),
                 )
             )
 
         return d
 
     def get_tags(self, id) -> list[str]:
+
         with self.connpool.get_connection() as conn:
             with conn.cursor() as cur:
                 cur.execute("SELECT tag FROM tags WHERE id=%s", (id,))

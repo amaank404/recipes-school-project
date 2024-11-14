@@ -1,3 +1,4 @@
+import functools
 import json
 import os
 from pathlib import Path
@@ -11,7 +12,7 @@ load_dotenv()
 
 from .blueprints import *
 from .dtypes import *
-from . import db
+from . import db, recipes_ai
 
 public_directory = os.environ["RECIPES_BACKEND_PUBLIC_DIRECTORY"]
 public_directory = Path(public_directory)
@@ -67,13 +68,13 @@ def get_category(category):
 
 @app.route("/api/v1/recipes/get/<int:id>")
 def get_recipe(id):
+    recipes_db.increase_popularity(id)
     resp = recipes_db.get_recipe(id)
     return jsonify(resp.as_recipe_data(IMAGE_API_TEMPLATE))
 
 
 @app.route("/api/v1/image/<fname>")
 def get_images(fname):
-    print(public_directory, fname)
     return send_from_directory(public_directory, fname)
 
 
@@ -99,7 +100,26 @@ def get_all_categories():
     return jsonify(recipes_db.get_all_bases())
 
 
+@app.route("/api/v1/gen_recipe/<recipe>")
+@functools.lru_cache(maxsize=1000)
+def gen_recipe(recipe):
+    return jsonify(recipes_ai.process_data(recipes_ai.get_recipe(recipe)))
+
+
 app.register_blueprint(
     admin,
     url_prefix="/admin",
 )
+
+
+@app.after_request
+def add_header(r):
+    """
+    Add headers to both force latest IE rendering engine or Chrome Frame,
+    and also to cache the rendered page for 10 minutes.
+    """
+    r.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    r.headers["Pragma"] = "no-cache"
+    r.headers["Expires"] = "0"
+    r.headers["Cache-Control"] = "public, max-age=0"
+    return r

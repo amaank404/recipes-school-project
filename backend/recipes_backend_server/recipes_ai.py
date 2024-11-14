@@ -1,12 +1,6 @@
-import logging
 import requests
 import json
-import dotenv
-from pathlib import Path
 import os
-from pprint import pprint
-
-dotenv.load_dotenv(Path(__file__).parent / ".env", override=True)
 
 ARLIAI_API_KEY = os.getenv("ARLIAI_API_KEY")
 
@@ -45,7 +39,7 @@ Total Time: <total time required including prepation and cooking in minutes>
 
 ~TIPS_AND_VARIATIONS_SEP_IDENTIFIER~
 
-# Nutrition Information (per serving):
+## Nutrition Information (per serving):
 - <nutrition parameter>: <value of the parameter>
 
 ~NUTRITION_INFORMATION_SEP_IDENTIFIER~
@@ -110,138 +104,11 @@ def process_data(msg: str):
     buff = ""
     for x in msg.splitlines():
         x = x.strip()
-        if x.startswith("~") and x.endswith("_SEP_IDENTIFIER~"):
-            section = x.removeprefix("~").removesuffix("_SEP_IDENTIFIER~")
+        if x.upper().startswith("~") and x.upper().endswith("_SEP_IDENTIFIER~"):
+            section = x.upper().removeprefix("~").removesuffix("_SEP_IDENTIFIER~")
             sections[section] = buff.strip().split("\n")
             buff = ""
         else:
             buff += x + "\n"
 
     return sections
-
-
-# msg = get_recipe("Carbonara")
-# with open("file.txt", "w") as f:
-#     f.write(msg)
-
-recipes = [
-    "aroma",
-    "bagel",
-    "batter",
-    "beans",
-    "beer",
-    "biscuit",
-    "bread",
-    "broth",
-    "burger",
-    "burrito",
-    "butter",
-    "cake",
-    "candy",
-    "caramel",
-    "caviar",
-    "cheese",
-    "chili",
-    "chimichanga",
-    "chocolate",
-    "cider",
-    "cobbler",
-    "cocoa",
-    "coffee",  # Done till here
-    "cookie",
-    "cream",
-    "croissant",
-    "crumble",
-    "cuisine",
-    "curd",
-    "dessert",
-    "dish",
-    "drink",
-    "eggs",
-    "empanada",
-    "enchilada",
-    "entree",
-    "filet",
-    "fish",
-    "flour",
-    "foie gras",
-    "food",
-    "glaze",
-    "grill",
-    "hamburger",
-    "ice",
-    "juice",
-    "ketchup",
-    "kitchen",
-    "lard",
-    "liquor",
-    "margarine",
-    "marinade",
-    "mayo",
-    "mayonnaise",
-    "meat",
-    "milk",
-    "mousse",
-    "muffin",
-    "mushroom",
-    "noodle",
-    "nut",
-    "oil",
-    "olive",
-    "omelette",
-    "pan",
-    "pasta",
-    "paste",
-    "pastry",
-    "pie",
-    "pizza",
-    "plate",
-    "pot",
-    "poutine",
-    "pudding",
-    "queso",
-    "raclette",
-    "recipe",
-    "rice",
-    "salad",
-    "salsa",
-    "sandwich",
-    "sauce",
-    "seasoning",
-    "skillet",
-    "soda",
-    "sopapillas",
-    "soup",
-    "soy",
-    "spice",
-    "steak",
-    "stew",
-    "syrup",
-    "taco",
-    "taquito",
-    "tartar",
-    "taste",
-    "tea",
-    "toast",
-    "tostada",
-    "vinegar",
-    "waffle",
-    "water",
-    "wheat",
-    "wine",
-    "wok",
-    "yeast",
-    "yogurt",
-]
-
-for x in recipes:
-    try:
-        data = get_recipe(x)
-        with open(f"{x}.txt", "w") as f:
-            f.write(data)
-    except:
-        print("PASSING", x)
-        raise
-
-msg = open("file.txt").read()
-pprint(process_data(msg))

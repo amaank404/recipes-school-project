@@ -100,4 +100,16 @@ export class PyAPIRepository {
 
     return response;
   }
+
+  async gen_recipe(recipe: string): Promise<any> {
+    let response = await (
+      await fetch(
+        this.api_base + "/api/v1/gen_recipe/" + encodeURIComponent(recipe)
+      )
+    ).json();
+
+    checkAPIError(response);
+
+    return response;
+  }
 }

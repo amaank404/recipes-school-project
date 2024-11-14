@@ -21,8 +21,8 @@ export default function RecipeItem({
   return (
     <span onClick={() => router.push(`/app/recipe?id=${id}`)}>
       <div className="shadow-sm rounded-md overflow-hidden w-48 p-1.5 bg-white mb-1 group cursor-pointer">
-        <Image
-          src={image_url}
+        <img
+          src={image_url + ".jpg"}
           alt="recipe image"
           width={300}
           height={200}

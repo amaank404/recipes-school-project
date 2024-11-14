@@ -10,9 +10,5 @@
   z-index: -1;
   content: "";
   position: absolute;
-  background: url("/banner.avif");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
   filter: brightness(0.8);
 }

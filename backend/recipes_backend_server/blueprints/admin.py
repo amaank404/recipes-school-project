@@ -2,6 +2,7 @@ import json
 import os
 import secrets
 from pathlib import Path
+import hashlib
 
 from flask import Blueprint, jsonify, request
 
@@ -15,11 +16,10 @@ admin = Blueprint("admin", __name__)
 public_directory = Path(os.environ["RECIPES_BACKEND_PUBLIC_DIRECTORY"])
 
 
-def get_fname():
-    while True:
-        d = public_directory / (secrets.token_hex(16) + ".png")
-        if not d.exists():
-            return d
+def get_fname(imdata: bytes):
+    d  = hashlib.sha256(imdata).hexdigest()
+
+    return public_directory / (d + ".png")
 
 
 def resize_img(datastream):
@@ -36,7 +36,7 @@ def resize_img(datastream):
     imoriginal = im.resize((w, h))
     imthumb = im.resize((w1, h1))
 
-    fname = get_fname()
+    fname = get_fname(imoriginal.tobytes())
     imoriginal.save(fname, "png")
     imthumb.save(fname.with_suffix(".png.jpg"), "jpeg")
 
@@ -53,7 +53,9 @@ def add_recipe():
     recipe = Recipe.from_json(recipe_data)
     recipe.image_file = fname
 
-    print(recipe)
+    if recipe.id == "new":
+        i = recipes_db.add_recipe(recipe)
+    else:
+        i = recipes_db.update_recipe(recipe)
 
-    i = recipes_db.add_recipe(recipe)
     return jsonify({"id": i})

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { RecipeData, genEmptyRecipeData } from "../repository/types";
-import { get_recipe, save_recipe } from "../repository/repository";
+import { gen_recipe, get_recipe, save_recipe } from "../repository/repository";
 import Loader from "../ui/loader";
 import LoadFailure from "../ui/load_failure";
 import BackButton from "../ui/backbutton";
@@ -13,6 +13,9 @@ import Button from "../ui/input/button";
 import _ from "lodash";
 import ImageInput from "../ui/input/image_input";
 import clsx from "clsx";
+import Popup from "../ui/popup";
+import LoadingIndicator from "../ui/loading_indicator";
+import { gen_recipe_to_string } from "../utils/process_recipe";
 
 export default function EditView({
   id,
@@ -29,6 +32,7 @@ export default function EditView({
   const [state, setState] = useState("loading");
   const [err, setError] = useState("");
   const [previewContent, setPreviewContent] = useState("");
+  const [genRecipesIndicator, setGenRecipesIndicator] = useState(false);
   const prevRecipeContents = useRef<string>("");
 
   const updateRecipeContent = (v: string) => {
@@ -132,6 +136,25 @@ export default function EditView({
       });
   };
 
+  const genRecipe = async () => {
+    setGenRecipesIndicator(true);
+
+    let resp: any = null;
+
+    try {
+      resp = await gen_recipe(data.recipe.name);
+    } catch (e: any) {
+      setGenRecipesIndicator(false);
+      alert("Recipe generation failed: " + e.message);
+      throw e;
+    }
+    resp = gen_recipe_to_string(resp);
+
+    updateRecipeContent(resp);
+
+    setGenRecipesIndicator(false);
+  };
+
   const crossButton = (
     <IconButton
       icon="close"
@@ -186,7 +209,16 @@ export default function EditView({
               />
             </div>
             <div className="flex mt-5 justify-between">
-              <Button label="Save" color="green" onClick={saveData} />
+              <div className="flex gap-2">
+                <Button label="Save" color="green" onClick={saveData} />
+                <Button
+                  label="Generate"
+                  color="pink"
+                  onClick={genRecipe}
+                  disabled={data.recipe.name.length === 0}
+                  icon="attach_file"
+                />
+              </div>
               <Button label="Discard" color="red" onClick={onClose} />
             </div>
           </div>
@@ -202,6 +234,17 @@ export default function EditView({
             </RichText>
           </div>
         </div>
+        {genRecipesIndicator ? (
+          <Popup>
+            <div className="rounded-md overflow-hidden bg-white p-10 flex items-center flex-col">
+              <div className="material-symbols-rounded text-2xl mb-4">info</div>
+              <div className="text-xl">Generating Recipe</div>
+              <LoadingIndicator />
+            </div>
+          </Popup>
+        ) : (
+          ""
+        )}
       </div>
     );
   } else {

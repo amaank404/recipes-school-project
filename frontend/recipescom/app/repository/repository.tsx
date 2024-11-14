@@ -29,3 +29,7 @@ export async function get_all_tags(): Promise<string[]> {
 export async function get_all_categories(): Promise<string[]> {
   return repository.get_all_categories();
 }
+
+export async function gen_recipe(recipe: string): Promise<any> {
+  return repository.gen_recipe(recipe);
+}

@@ -12,14 +12,15 @@ def _alias_gen():
 
 def _search_query(usr_data: str) -> str:
     return (
-        "'"
+        "'%"
         + usr_data.replace("'", "''")
-        .replace("%", r"\%")
-        .replace("_", r"\_")
+        .replace("~", "~~")
+        .replace("%", "~%")
+        .replace("_", "~_")
         .replace("*", "%")
         .replace("?", "_")
         .replace(" ", "?%")
-        + "'"
+        + "%'"
     )
 
 
@@ -182,7 +183,7 @@ class SearchQuery:
             assert _checkcol(col)
             assert isinstance(p, str)
             col = self._prepend_col(col)
-            query.append(f"(LOWER({col}) LIKE {_search_query(p.lower())} ESCAPE '\\')")
+            query.append(f"({col} LIKE {_search_query(p.lower())} ESCAPE '~')")
             query.append("AND")
 
         for col, p in self._contains:

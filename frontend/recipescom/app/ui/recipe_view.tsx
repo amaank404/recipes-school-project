@@ -36,7 +36,7 @@ function RecipeBanner({
   return (
     <div className="w-full h-[100vh] relative flex flex-col px-5 sm:px-20 justify-center text-white items-center">
       <div className="absolute top-0 bottom-0 left-0 right-0 bg-slate-400 -z-10">
-        <Image
+        <img
           src={image_url}
           alt="recipe image"
           width={1920}
