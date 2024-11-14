@@ -17,7 +17,18 @@ export function gen_recipe_to_string(recipe: any): string {
       console.error(`undefined field ${x} on`, recipe);
       continue;
     }
-    extend_arr(contents, recipe[x], j);
+    try {
+      extend_arr(contents, recipe[x], j);
+    } catch (e) {
+      console.error(
+        "extend arr problem, gen_recipe_to_string: ",
+        e,
+        x,
+        recipe,
+        recipe[x],
+        typeof recipe[x]
+      );
+    }
   }
 
   return contents.join("\n\n");

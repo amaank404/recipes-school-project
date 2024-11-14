@@ -18,7 +18,7 @@ export default function HomePage() {
     "2.webp",
     "3.jpg",
     "4.webp",
-    "6.webp",
+    "6.jpg",
     "eggs.jpg",
     "pasta.jpg",
   ];
