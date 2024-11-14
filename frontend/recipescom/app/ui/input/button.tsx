@@ -18,11 +18,11 @@ export default function Button({
 
   return (
     <div
-      className={`rounded-md px-6 py-2 select-none transition-all font-semibold flex gap-1 ${
+      className={`rounded-md px-6 py-2 select-none transition-all font-semibold flex gap-1 justify-center ${
         disabled
           ? "bg-slate-100 text-slate-400 cursor-not-allowed"
           : className + " cursor-pointer active:ring ring-offset-2"
-      } text-center`}
+      }`}
       onClick={disabled ? undefined : onClick}
     >
       {icon ? (

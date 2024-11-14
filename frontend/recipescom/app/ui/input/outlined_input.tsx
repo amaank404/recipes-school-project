@@ -10,6 +10,7 @@ export default function OutlinedInput({
   initVal,
   onChange,
   onBlur: onBlurCallback,
+  password,
 }: {
   placeholder: string;
   className?: string;
@@ -17,6 +18,7 @@ export default function OutlinedInput({
   initVal?: string;
   onChange?: (evt: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   onBlur?: (evt: FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  password?: boolean;
 }) {
   let v = initVal?.length;
   if (v === undefined) v = 0;
@@ -51,6 +53,7 @@ export default function OutlinedInput({
           ></textarea>
         ) : (
           <input
+            type={password ? "password" : "text"}
             className={inputClassName}
             onFocus={onFocus}
             onBlur={onBlur}

@@ -6,11 +6,12 @@ import SearchSideBar, { SearchData } from "../ui/input/search_side_bar";
 import Popup from "../ui/popup";
 import TableView from "../ui/table_view";
 import EditView from "./editview";
-import { search } from "../repository/repository";
+import { initRepo, search, try_auth } from "../repository/repository";
 import { Recipe, SearchParams } from "../repository/types";
 import Loader from "../ui/loader";
 import LoadFailure from "../ui/load_failure";
-import _ from "lodash";
+import _, { first } from "lodash";
+import searchDataToQuery from "../utils/searchdata_to_query";
 
 function RecipeTableLoader({
   className,
@@ -24,6 +25,7 @@ function RecipeTableLoader({
   let [data, setData] = useState<Recipe[]>();
   let [state, setState] = useState("loading");
   let [err, setErr] = useState("");
+  let [firstLoad, setFirstLoad] = useState(true);
   const currentQuery = useRef(query);
 
   if (!_.isEqual(currentQuery.current, query)) {
@@ -32,22 +34,30 @@ function RecipeTableLoader({
   }
 
   useEffect(() => {
+    initRepo();
+    try_auth();
+  }, []);
+
+  useEffect(() => {
     if (state !== "success") onData?.([]);
 
+    initRepo();
     search(query)
       .then((data) => {
         setData(data);
         setState("success");
+        setFirstLoad(false);
       })
       .catch((e) => {
         setErr(e.message);
         setState("error");
+        setFirstLoad(false);
       });
   }, [state]);
 
-  if (state === "loading") {
+  if (state === "loading" && firstLoad) {
     return <Loader className={className} nobackbutton />;
-  } else if (state === "success") {
+  } else if (state === "success" || (state === "loading" && !firstLoad)) {
     return (
       <TableView
         className={className}
@@ -65,23 +75,7 @@ export default function Admin() {
   let [searchData, setSearchData] = useState<SearchData>();
   let [select, setSelect] = useState<string[]>([]);
 
-  let query: SearchParams = {
-    query: [],
-  };
-
-  if (searchData) {
-    let catArr = [];
-    for (let x of searchData.categories) {
-      catArr.push(x.toLowerCase());
-    }
-
-    if (catArr.length)
-      query.query.push(["contains", "recipes.base", ...catArr]);
-    if (searchData.tags.size)
-      query.query.push(["contains", "tags.tag", ...searchData.tags]);
-    if (searchData.search.trim().length)
-      query.query.push(["search", "recipes.name", searchData.search.trim()]);
-  }
+  const query = searchDataToQuery(searchData);
 
   const setSelectData = useCallback((d: string[]) => {
     setSelect(d);

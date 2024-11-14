@@ -2,7 +2,12 @@
 
 import { useEffect, useRef, useState } from "react";
 import { RecipeData, genEmptyRecipeData } from "../repository/types";
-import { gen_recipe, get_recipe, save_recipe } from "../repository/repository";
+import {
+  gen_recipe,
+  get_recipe,
+  initRepo,
+  save_recipe,
+} from "../repository/repository";
 import Loader from "../ui/loader";
 import LoadFailure from "../ui/load_failure";
 import BackButton from "../ui/backbutton";
@@ -87,6 +92,7 @@ export default function EditView({
   useEffect(() => {
     if (state !== "loading") return;
 
+    initRepo();
     if (id != "new") {
       get_recipe(id)
         .then((data) => {

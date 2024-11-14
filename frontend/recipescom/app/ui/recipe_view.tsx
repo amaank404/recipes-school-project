@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { get_recipe } from "@/app/repository/repository";
+import { get_recipe, initRepo } from "@/app/repository/repository";
 import RichText from "./rich_text";
 import "./recipe_view.css";
 import BackButton from "./backbutton";
@@ -68,6 +68,7 @@ export default function RecipeView({ id }: { id: string }) {
   let [err, setErr] = useState("");
 
   useEffect(() => {
+    initRepo();
     get_recipe(id)
       .then((recipe) => {
         setData(recipe);

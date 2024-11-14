@@ -14,7 +14,7 @@ from .blueprints import *
 from .dtypes import *
 from . import db, recipes_ai
 
-public_directory = os.environ["RECIPES_BACKEND_PUBLIC_DIRECTORY"]
+public_directory = os.getenv("RECIPES_BACKEND_PUBLIC_DIRECTORY")
 public_directory = Path(public_directory)
 public_directory.mkdir(exist_ok=True)
 public_directory = str(public_directory.resolve())

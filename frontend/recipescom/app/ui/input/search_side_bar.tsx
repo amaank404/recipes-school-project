@@ -4,7 +4,11 @@ import { useEffect, useState } from "react";
 import CategorySelector from "./category_selector";
 import Search from "./search";
 import TagSelectors from "./tag_select";
-import { get_all_categories, get_all_tags } from "@/app/repository/repository";
+import {
+  get_all_categories,
+  get_all_tags,
+  initRepo,
+} from "@/app/repository/repository";
 
 function SideBarHeading({ children }: { children?: React.ReactNode }) {
   return <div className="text-slate-600 mt-4 text-xl mb-2">{children}</div>;
@@ -27,6 +31,7 @@ export default function SearchSideBar({
 
   useEffect(() => {
     async function fetchData() {
+      initRepo();
       const tags_promise = get_all_tags();
       const cats_promise = get_all_categories();
 

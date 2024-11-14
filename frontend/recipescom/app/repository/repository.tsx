@@ -3,8 +3,17 @@ import { DummyRepository } from "./dummy";
 import { PyAPIRepository } from "./pyapi_repository";
 import { Recipe, RecipeData, SearchParams } from "./types";
 
-const repository = new PyAPIRepository("http://localhost:9422");
+let repository: PyAPIRepository;
 // const repository = new DummyRepository();
+
+export function initRepo() {
+  if (repository === undefined) {
+    repository = new PyAPIRepository(
+      "http://localhost:9422",
+      localStorage.getItem("password") || ""
+    );
+  }
+}
 
 export async function get_list(category: string): Promise<Recipe[]> {
   return repository.get_list(category);
@@ -32,4 +41,8 @@ export async function get_all_categories(): Promise<string[]> {
 
 export async function gen_recipe(recipe: string): Promise<any> {
   return repository.gen_recipe(recipe);
+}
+
+export async function try_auth() {
+  repository.auth();
 }

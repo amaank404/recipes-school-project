@@ -201,6 +201,12 @@ CREATE TABLE IF NOT EXISTS metadata (
             raise ValueError("Unknown order by value")
         return order_by
 
+    def delete_recipe(self, id):
+        with self.connpool.get_connection() as conn:
+            with conn.cursor() as cur:
+                cur.executemany("DELETE FROM recipes WHERE id=%s", [(x,) for x in id])
+            conn.commit()
+
     def get_category(
         self, category: str, page_limit: int = 10, page: int = 0
     ) -> list[Recipe]:
