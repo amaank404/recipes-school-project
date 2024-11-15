@@ -40,22 +40,30 @@ export default function TagSelectors({
 
   return (
     <div className="flex flex-wrap gap-1 justify-center">
-      {tags.map((tag: string) => (
-        <div
-          key={tag}
-          onClick={() => {
-            setSelected((sel) => {
-              var newSel = new Set<string>();
-              sel.forEach((selItem: string) => newSel.add(selItem));
-              newSel.has(tag) ? newSel.delete(tag) : newSel.add(tag);
+      {tags.length !== 0 ? (
+        tags.map((tag: string) => (
+          <div
+            key={tag}
+            onClick={() => {
+              setSelected((sel) => {
+                let newSel = new Set<string>();
+                sel.forEach((selItem: string) => newSel.add(selItem));
+                if (newSel.has(tag)) {
+                  newSel.delete(tag);
+                } else {
+                  newSel.add(tag);
+                }
 
-              return newSel;
-            });
-          }}
-        >
-          <Tag selected={selected.has(tag)}>{tag}</Tag>
-        </div>
-      ))}
+                return newSel;
+              });
+            }}
+          >
+            <Tag selected={selected.has(tag)}>{tag}</Tag>
+          </div>
+        ))
+      ) : (
+        <div className="h-16 text-slate-400 text-sm pt-1">Loading Tags...</div>
+      )}
     </div>
   );
 }

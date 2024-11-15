@@ -26,7 +26,7 @@ background-size: cover;
       <div className="py-6 flex flex-col gap-5">
         <RecipeSection title="Popular" fetch="top_desc" />
         <RecipeSection title="Easy" fetch="tag_Easy_date-added_desc" />
-        <RecipeSection title="Recent Addition" fetch="date-added_" />
+        <RecipeSection title="New" fetch="date-added_" />
       </div>
     </div>
   );

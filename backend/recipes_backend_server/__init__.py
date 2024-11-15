@@ -18,13 +18,16 @@ public_directory = os.getenv("RECIPES_BACKEND_PUBLIC_DIRECTORY")
 public_directory = Path(public_directory)
 public_directory.mkdir(exist_ok=True)
 public_directory = str(public_directory.resolve())
+image_api_base_url = os.getenv(
+    "RECIPES_BACKEND_IMAGE_API_BASE_URL", "http://localhost:9422"
+)
 
 app = Flask(__name__)
 CORS(app, resources={"/api/*": {"origins": "*"}, "/admin/*": {"origins": "*"}})
 
 recipes_db = db.recipes_db
 
-IMAGE_API_TEMPLATE = "http://localhost:9422/api/v1/image/{fname}"
+IMAGE_API_TEMPLATE = f"{image_api_base_url}/api/v1/image/{{fname}}"
 
 
 @app.errorhandler(Exception)
@@ -59,7 +62,7 @@ def get_category(category):
     limit = request.args.get("limit", 10)
     if limit > 50:
         raise ValueError("Limit can not be greater than 50")
-    page = request.args.get("page", 0)
+    page = int(request.args.get("page", 0))
 
     recipes = recipes_db.get_category(category, limit, page)
 
@@ -80,10 +83,10 @@ def get_images(fname):
 
 @app.route("/api/v1/recipes/search", methods=["POST"])
 def search_recipes():
-    limit = request.args.get("limit", 10)
-    if limit > 50:
-        raise ValueError("Limit can not be greater than 50")
-    page = request.args.get("page", 0)
+    limit = request.args.get("limit", 50)
+    if limit > 100:
+        raise ValueError("Limit can not be greater than 100")
+    page = int(request.args.get("page", 0))
 
     recipes = recipes_db.search(request.json["query"], limit, page)
 

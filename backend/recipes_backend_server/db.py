@@ -281,13 +281,13 @@ CREATE TABLE IF NOT EXISTS metadata (
     def get_all_tags(self) -> list[str]:
         with self.connpool.get_connection() as conn:
             with conn.cursor() as cur:
-                cur.execute("SELECT DISTINCT tag FROM tags")
+                cur.execute("SELECT DISTINCT tag FROM tags ORDER BY tag")
                 return [x[0] for x in cur.fetchall()]
 
     def get_all_bases(self) -> list[str]:
         with self.connpool.get_connection() as conn:
             with conn.cursor() as cur:
-                cur.execute("SELECT DISTINCT base FROM recipes")
+                cur.execute("SELECT DISTINCT base FROM recipes ORDER BY base")
                 return [x[0] for x in cur.fetchall()]
 
     def search(self, query: list[str, str], page_limit: int = 10, page: int = 0):
@@ -300,7 +300,7 @@ CREATE TABLE IF NOT EXISTS metadata (
 
         s = (
             q.table("recipes")
-            .join("tags", "id", "id")
+            .join("tags", "id", "id", join_type="LEFT")
             .join("popularity", "id", "id")
             .columns("id", "name", "base", "date_added", "image_file")
             .limit(page_limit)

@@ -81,12 +81,17 @@ export class PyAPIRepository {
     return response;
   }
 
-  async search(s: SearchParams): Promise<Recipe[]> {
+  async search(
+    s: SearchParams,
+    page: number = 0,
+    abortSignal?: AbortSignal
+  ): Promise<Recipe[]> {
     let response = await (
-      await fetch(this.api_base + "/api/v1/recipes/search", {
+      await fetch(this.api_base + `/api/v1/recipes/search?page=${page}`, {
         method: "POST",
         body: JSON.stringify(s),
         headers: { "Content-Type": "application/json" },
+        signal: abortSignal,
       })
     ).json();
 
@@ -155,5 +160,22 @@ export class PyAPIRepository {
     checkAPIError(response);
 
     return response;
+  }
+
+  async delete_recipe(ids: string[]): Promise<any> {
+    await this.auth();
+
+    const payload = JSON.stringify(ids);
+
+    let response = await await fetch(
+      this.api_base + `/admin/recipes/remove?token=${this.token}`,
+      {
+        method: "POST",
+        body: payload,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+
+    checkAPIError(response);
   }
 }

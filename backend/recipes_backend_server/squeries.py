@@ -65,8 +65,15 @@ class SearchQuery:
         self._table = table
         return self
 
-    def join(self, table: str, from_col: str, to_col: str, to_col_table=None) -> Self:
-        self._joins.append((table, from_col, to_col, to_col_table))
+    def join(
+        self,
+        table: str,
+        from_col: str,
+        to_col: str,
+        to_col_table=None,
+        join_type: str = "INNER",
+    ) -> Self:
+        self._joins.append(((table, from_col, to_col, to_col_table), join_type))
         return self
 
     def columns(self, *columns: list[str]) -> Self:
@@ -151,13 +158,18 @@ class SearchQuery:
         query.append("FROM")
         query.append(self._table)
 
-        for x in self._joins:
+        for x, join_type in self._joins:
             if x[-1] is None:
                 x = x[:-1] + (self._table,)
             assert all(map(_checkcol, x))
+            assert join_type.upper() in ("INNER", "LEFT", "RIGHT", "NATURAL")
             query.append(
-                "INNER JOIN {table} ON {table}.{from_col} = {target}.{to_col}".format(
-                    table=x[0], from_col=x[1], to_col=x[2], target=x[3]
+                "{join_type} JOIN {table} ON {table}.{from_col} = {target}.{to_col}".format(
+                    table=x[0],
+                    from_col=x[1],
+                    to_col=x[2],
+                    target=x[3],
+                    join_type=join_type,
                 )
             )
 

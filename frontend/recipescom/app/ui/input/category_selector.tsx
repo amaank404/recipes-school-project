@@ -38,16 +38,20 @@ export default function CategorySelector({
     if (onData !== undefined) onData(selected);
   }, [selected]);
 
-  return (
+  return cats.length !== 0 ? (
     <div className="bg-white w-full rounded-lg overflow-hidden max-w-[35rem]">
       {cats.map((cat: string) => (
         <div
           key={cat}
           onClick={() =>
             setSelected((sel) => {
-              var newSel = new Set<string>();
+              let newSel = new Set<string>();
               sel.forEach((selItem: string) => newSel.add(selItem));
-              newSel.has(cat) ? newSel.delete(cat) : newSel.add(cat);
+              if (newSel.has(cat)) {
+                newSel.delete(cat);
+              } else {
+                newSel.add(cat);
+              }
               return newSel;
             })
           }
@@ -55,6 +59,10 @@ export default function CategorySelector({
           <Category selected={selected.has(cat)}>{cat}</Category>
         </div>
       ))}
+    </div>
+  ) : (
+    <div className="h-32 text-slate-400 text-sm pt-1">
+      Loading Categories...
     </div>
   );
 }

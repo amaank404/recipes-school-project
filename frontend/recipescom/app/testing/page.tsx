@@ -1,11 +1,11 @@
 import "@/app/globals.css";
 
-import OutlinedInput from "../ui/input/outlined_input";
+import PageSelector from "../ui/input/page_selector";
 
 export default function TestPage() {
   return (
     <div className="flex p-10">
-      <OutlinedInput placeholder="Email" />
+      <PageSelector />
     </div>
   );
 }

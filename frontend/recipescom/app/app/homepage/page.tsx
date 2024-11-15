@@ -8,9 +8,10 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 function choose<T>(choices: T[]) {
-  var index = Math.floor(Math.random() * choices.length);
+  const index = Math.floor(Math.random() * choices.length);
   return choices[index];
 }
+
 export default function HomePage() {
   let banner_imgs = [
     "beef.webp",

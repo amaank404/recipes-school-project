@@ -39,6 +39,7 @@ def resize_img(datastream):
 
     imoriginal = im.resize((w, h)) if im.height > h else im
     imthumb = im.resize((w1, h1)) if im.height > h1 else im
+    imthumb = imthumb.convert("RGB")
 
     fname = get_fname(imoriginal.tobytes())
     imoriginal.save(fname, "png")
@@ -94,12 +95,14 @@ def remove_recipe():
 
     recipes_db.delete_recipe(recipe_data)
 
+    return jsonify({"status": "OKAY"})
+
 
 @admin.route("/auth", methods=["POST"])
 def get_token():
     if request.form["password"] == admin_password:
         tokens.append(token := secrets.token_urlsafe(32))
-        return jsonify({"token": tokens})
+        return jsonify({"token": token})
     else:
         raise ValueError("Authentication Error")
 

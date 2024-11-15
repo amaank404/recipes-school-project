@@ -103,7 +103,7 @@ export default function RecipeSection({
   }
 
   return (
-    <div className="sm:px-12 px-3">
+    <div className="sm:px-20 px-4">
       <div
         className={clsx(
           "text-3xl font-semibold mb-2",

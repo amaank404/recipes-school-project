@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function RecipeItem({
   id,
@@ -17,6 +18,8 @@ export default function RecipeItem({
 }) {
   let router = useRouter();
 
+  let [opacity, setOpacity] = useState(0);
+
   return (
     <span onClick={() => router.push(`/app/recipe?id=${id}`)}>
       <div className="shadow-sm rounded-md overflow-hidden w-48 p-1.5 bg-white mb-1 group cursor-pointer">
@@ -25,7 +28,9 @@ export default function RecipeItem({
           alt="recipe image"
           width={300}
           height={200}
-          className="w-full h-24 rounded-md object-cover"
+          className="w-full h-24 rounded-md object-cover bg-slate-100 transition-opacity"
+          style={{ opacity: opacity }}
+          onLoad={() => setOpacity(1)}
         />
         <div className="group-hover:underline">{name}</div>
         <div className="uppercase tracking-[0.2em] text-xs text-gray-500 font-semibold">

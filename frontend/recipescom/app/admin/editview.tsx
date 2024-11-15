@@ -214,8 +214,8 @@ export default function EditView({
                 initVal={data.content}
               />
             </div>
-            <div className="flex mt-5 justify-between">
-              <div className="flex gap-2">
+            <div className="flex mt-5 justify-between gap-2 flex-wrap">
+              <div className="flex gap-2 flex-wrap">
                 <Button label="Save" color="green" onClick={saveData} />
                 <Button
                   label="Generate"
@@ -243,8 +243,11 @@ export default function EditView({
         {genRecipesIndicator ? (
           <Popup>
             <div className="rounded-md overflow-hidden bg-white p-10 flex items-center flex-col">
-              <div className="material-symbols-rounded text-2xl mb-4">info</div>
+              <div className="material-symbols-rounded text-2xl">info</div>
               <div className="text-xl">Generating Recipe</div>
+              <div className="text-sm text-slate-500">
+                Please wait and do not reload this page
+              </div>
               <LoadingIndicator />
             </div>
           </Popup>

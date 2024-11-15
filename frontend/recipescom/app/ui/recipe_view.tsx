@@ -33,15 +33,19 @@ function RecipeBanner({
     );
   });
 
+  let [opacity, setOpacity] = useState(0);
+
   return (
     <div className="w-full h-[100vh] relative flex flex-col px-5 sm:px-20 justify-center text-white items-center">
-      <div className="absolute top-0 bottom-0 left-0 right-0 bg-slate-400 -z-10">
+      <div className="absolute top-0 bottom-0 left-0 right-0 bg-black -z-10">
         <img
           src={image_url}
           alt="recipe image"
           width={1920}
           height={1080}
-          className="w-full h-full object-cover object-center filter brightness-[0.60]"
+          className="w-full h-full object-cover object-center filter brightness-[0.60] transition-opacity"
+          onLoad={() => setOpacity(1)}
+          style={{ opacity: opacity }}
         />
       </div>
       <div className="max-w-screen-lg w-full relative h-full flex flex-col justify-center max-sm:items-center">
