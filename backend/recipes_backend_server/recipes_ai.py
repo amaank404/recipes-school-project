@@ -88,7 +88,11 @@ def get_recipe(recipe: str):
         if line == "[DONE]":
             break
 
-        d = json.loads(line)
+        try:
+            d = json.loads(line)
+        except:
+            print(line)
+            raise
         if d["object"] == "chat.completion.chunk":
             delta = d["choices"][0]["delta"]
             if "content" in delta:
