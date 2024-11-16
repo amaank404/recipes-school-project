@@ -22,7 +22,7 @@ function GridDataViewItem({ recipe }: { recipe: Recipe }) {
           alt="recipe image"
           width={300}
           height={200}
-          className="w-48 h-36 object-cover bg-slate-100 transition-opacity"
+          className="w-48 h-36 object-cover bg-slate-100 transition-opacity flex-shrink-0"
           style={{ opacity: opacity }}
           onLoad={() => setOpacity(1)}
         />
