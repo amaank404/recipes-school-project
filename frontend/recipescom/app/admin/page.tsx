@@ -6,12 +6,7 @@ import SearchSideBar, { SearchData } from "../ui/input/search_side_bar";
 import Popup from "../ui/popup";
 import TableView from "../ui/table_view";
 import EditView from "./editview";
-import {
-  delete_recipe,
-  initRepo,
-  search,
-  try_auth,
-} from "../repository/repository";
+import { delete_recipe, search } from "../repository/repository";
 import { Recipe, SearchParams } from "../repository/types";
 import Loader from "../ui/loader";
 import LoadFailure from "../ui/load_failure";
@@ -19,6 +14,7 @@ import _ from "lodash";
 import searchDataToQuery from "../utils/searchdata_to_query";
 import PageSelector from "../ui/input/page_selector";
 import Link from "next/link";
+import { doAuthToken } from "../repository/client_auth_helper";
 
 function RecipeTableLoader({
   className,
@@ -44,36 +40,29 @@ function RecipeTableLoader({
   }, [rerender]);
 
   useEffect(() => {
-    initRepo();
-    try_auth();
+    doAuthToken();
   }, []);
 
   useEffect(() => {
     if (state !== "success") onData?.([]);
 
-    initRepo();
+    const reqState = { update: true };
 
-    const abortController = new AbortController();
-    const signal = abortController.signal;
-
-    search(query, page, signal)
+    search(query, page)
       .then((data) => {
+        if (!reqState.update) return;
         setData(data);
         setState("success");
         setFirstLoad(false);
       })
       .catch((e) => {
-        if (e.name === "AbortError") {
-          console.log("Fetch Abortion");
-          return;
-        }
         setErr(e.message);
         setState("error");
         setFirstLoad(false);
       });
 
     return () => {
-      abortController.abort();
+      reqState.update = false;
     };
   }, [state]);
 
@@ -133,8 +122,9 @@ export default function Admin() {
   }
 
   async function deleteRecipe() {
-    initRepo();
-    await delete_recipe(select);
+    const token = await doAuthToken();
+
+    await delete_recipe(select, token);
     setConfirmationPopup(false);
     do_rerender();
   }

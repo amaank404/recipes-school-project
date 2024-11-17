@@ -2,7 +2,7 @@
 
 import RecipeItem from "./recipe_item";
 import React, { useEffect, useState } from "react";
-import { get_list, initRepo } from "@/app/repository/repository";
+import { get_list } from "@/app/repository/repository";
 import clsx from "clsx";
 import { Recipe } from "../repository/types";
 
@@ -70,7 +70,6 @@ export default function RecipeSection({
   const [error, setError] = useState("");
 
   useEffect(() => {
-    initRepo();
     get_list(fetch)
       .then((recipes) => {
         setData(recipes);

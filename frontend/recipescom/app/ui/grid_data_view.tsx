@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Recipe, SearchParams } from "../repository/types";
-import { initRepo, search } from "../repository/repository";
+import { search } from "../repository/repository";
 import Loader from "./loader";
 import PageSelector from "./input/page_selector";
 import LoadFailure from "./load_failure";
@@ -89,32 +89,26 @@ export default function GridDataViewLoader({
   }, [rerender]);
 
   useEffect(() => {
-    initRepo();
-  }, []);
+    const reqState = {
+      update: true,
+    };
 
-  useEffect(() => {
-    initRepo();
-    const controller = new AbortController();
-    const signal = controller.signal;
-
-    search(query, page, signal)
+    search(query, page)
       .then((data) => {
+        if (!reqState.update) return;
+
         setData(data);
         setState("success");
         setFirstLoad(false);
       })
       .catch((e) => {
-        if (e.name === "AbortError") {
-          console.log("Fetch Abortion");
-          return;
-        }
         setErr(e.message);
         setState("error");
         setFirstLoad(false);
       });
 
     return () => {
-      controller.abort();
+      reqState.update = false;
     };
   }, [state]);
 

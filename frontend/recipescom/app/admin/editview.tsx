@@ -2,12 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { RecipeData, genEmptyRecipeData } from "../repository/types";
-import {
-  gen_recipe,
-  get_recipe,
-  initRepo,
-  save_recipe,
-} from "../repository/repository";
+import { gen_recipe, get_recipe, save_recipe } from "../repository/repository";
 import Loader from "../ui/loader";
 import LoadFailure from "../ui/load_failure";
 import BackButton from "../ui/backbutton";
@@ -21,6 +16,7 @@ import clsx from "clsx";
 import Popup from "../ui/popup";
 import LoadingIndicator from "../ui/loading_indicator";
 import { gen_recipe_to_string } from "../utils/process_recipe";
+import { doAuthToken } from "../repository/client_auth_helper";
 
 export default function EditView({
   id,
@@ -92,7 +88,6 @@ export default function EditView({
   useEffect(() => {
     if (state !== "loading") return;
 
-    initRepo();
     if (id != "new") {
       get_recipe(id)
         .then((data) => {
@@ -130,8 +125,9 @@ export default function EditView({
 
   const saveData = () => {
     async function sData() {
+      const token = await doAuthToken();
       data.recipe.id = id;
-      await save_recipe(data);
+      await save_recipe(data, token);
     }
 
     sData()
@@ -148,7 +144,8 @@ export default function EditView({
     let resp: any = null;
 
     try {
-      resp = await gen_recipe(data.recipe.name);
+      const token = await doAuthToken();
+      resp = await gen_recipe(data.recipe.name, token);
     } catch (e: any) {
       setGenRecipesIndicator(false);
       alert("Recipe generation failed: " + e.message);

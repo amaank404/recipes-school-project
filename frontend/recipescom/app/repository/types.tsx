@@ -18,6 +18,13 @@ export interface APIError {
   msg: string;
 }
 
+type AuthActionType = "href" | "token";
+
+export interface AuthAction {
+  type: AuthActionType;
+  value: string;
+}
+
 export interface SearchParams {
   query: (string | number)[][];
 }

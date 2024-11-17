@@ -4,11 +4,7 @@ import { useEffect, useState } from "react";
 import CategorySelector from "./category_selector";
 import Search from "./search";
 import TagSelectors from "./tag_select";
-import {
-  get_all_categories,
-  get_all_tags,
-  initRepo,
-} from "@/app/repository/repository";
+import { get_all_categories, get_all_tags } from "@/app/repository/repository";
 import clsx from "clsx";
 import BackButton from "../backbutton";
 
@@ -35,7 +31,6 @@ export default function SearchSideBar({
 
   useEffect(() => {
     async function fetchData() {
-      initRepo();
       const tags_promise = get_all_tags();
       const cats_promise = get_all_categories();
 

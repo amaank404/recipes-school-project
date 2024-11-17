@@ -1,1 +1,1 @@
-# NEXT_PUBLIC_API_BASE="https://<host>:<port>"
+# API_BASE=http[s]://<host>:<port>

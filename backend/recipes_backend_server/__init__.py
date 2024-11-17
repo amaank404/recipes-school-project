@@ -18,8 +18,8 @@ public_directory = os.getenv("RECIPES_BACKEND_PUBLIC_DIRECTORY")
 public_directory = Path(public_directory)
 public_directory.mkdir(exist_ok=True)
 public_directory = str(public_directory.resolve())
-image_api_base_url = os.getenv(
-    "RECIPES_BACKEND_IMAGE_API_BASE_URL", "http://localhost:9422"
+image_api_url = os.getenv(
+    "RECIPES_BACKEND_IMAGE_API_URL", "http://localhost:9422/api/v1/image/{fname}"
 )
 
 app = Flask(__name__)
@@ -27,7 +27,7 @@ CORS(app, resources={"/api/*": {"origins": "*"}, "/admin/*": {"origins": "*"}})
 
 recipes_db = db.recipes_db
 
-IMAGE_API_TEMPLATE = f"{image_api_base_url}/api/v1/image/{{fname}}"
+IMAGE_API_TEMPLATE = image_api_url
 
 
 @app.errorhandler(Exception)
@@ -76,7 +76,7 @@ def get_recipe(id):
     return jsonify(resp.as_recipe_data(IMAGE_API_TEMPLATE))
 
 
-@app.route("/api/v1/image/<fname>")
+@app.route("/static/image/<fname>")
 def get_images(fname):
     return send_from_directory(public_directory, fname)
 
@@ -103,10 +103,9 @@ def get_all_categories():
     return jsonify(recipes_db.get_all_bases())
 
 
-@app.route("/api/v1/gen_recipe/<recipe>")
-@functools.lru_cache(maxsize=1000)
-def gen_recipe(recipe):
-    return jsonify(recipes_ai.process_data(recipes_ai.get_recipe(recipe)))
+@app.route("/api/ping")
+def ping():
+    return "pong"
 
 
 app.register_blueprint(
@@ -121,8 +120,11 @@ def add_header(r):
     Add headers to both force latest IE rendering engine or Chrome Frame,
     and also to cache the rendered page for 10 minutes.
     """
-    r.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
-    r.headers["Pragma"] = "no-cache"
-    r.headers["Expires"] = "0"
-    r.headers["Cache-Control"] = "public, max-age=0"
+    if request.path.startswith("/api") or request.path.startswith("/admin"):
+        r.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+        r.headers["Pragma"] = "no-cache"
+        r.headers["Expires"] = "0"
+    else:
+        r.headers["Cache-Control"] = "max-age=86400, must-revalidate"
+        r.headers["Age"] = "0"
     return r

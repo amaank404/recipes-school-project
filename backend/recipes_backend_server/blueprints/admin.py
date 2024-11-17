@@ -1,3 +1,4 @@
+import functools
 import json
 import os
 import secrets
@@ -8,6 +9,7 @@ from flask import Blueprint, jsonify, request
 
 from ..db import recipes_db
 from ..dtypes import *
+from .. import recipes_ai
 
 from PIL import Image
 
@@ -105,6 +107,13 @@ def get_token():
         return jsonify({"token": token})
     else:
         raise ValueError("Authentication Error")
+
+
+@admin.route("/gen_recipe/<recipe>")
+@needs_token
+@functools.lru_cache(maxsize=1000)
+def gen_recipe(recipe):
+    return jsonify(recipes_ai.process_data(recipes_ai.get_recipe(recipe)))
 
 
 @admin.route("/token_check", methods=["POST", "GET"])
