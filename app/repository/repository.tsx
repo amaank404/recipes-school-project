@@ -1,4 +1,4 @@
-"use server";
+"use client";
 
 import {
   AuthAction,
@@ -25,7 +25,7 @@ export async function auth(
   let payload = new FormData();
   payload.append("password", password);
   let response = await (
-    await fetch(api_base + "/admin/auth", {
+    await fetch("/api/admin/auth", {
       body: payload,
       method: "POST",
     })
@@ -43,7 +43,7 @@ export async function auth(
 export async function check_valid_token(token: string): Promise<boolean> {
   try {
     let response = await (
-      await fetch(api_base + "/admin/token_check?token=" + token)
+      await fetch("/api/admin/token_check?token=" + token)
     ).json();
     checkAPIError(response);
     return true;
@@ -53,9 +53,7 @@ export async function check_valid_token(token: string): Promise<boolean> {
 }
 
 export async function get_list(category: string): Promise<Recipe[]> {
-  let response = await (
-    await fetch(api_base + "/api/v1/recipes/cat/" + category)
-  ).json();
+  let response = await (await fetch("/api/v1/recipes/cat/" + category)).json();
   checkAPIError(response);
   for (let x of response) {
     checkType(x, isRecipe);
@@ -65,9 +63,7 @@ export async function get_list(category: string): Promise<Recipe[]> {
 }
 
 export async function get_recipe(id: string): Promise<RecipeData> {
-  let response = await (
-    await fetch(api_base + "/api/v1/recipes/get/" + id)
-  ).json();
+  let response = await (await fetch("/api/v1/recipes/get/" + id)).json();
   checkAPIError(response);
   checkType(response, isRecipeData);
 
@@ -79,7 +75,7 @@ export async function search(
   page: number = 0
 ): Promise<Recipe[]> {
   let response = await (
-    await fetch(api_base + `/api/v1/recipes/search?page=${page}`, {
+    await fetch(`/api/v1/recipes/search?page=${page}`, {
       method: "POST",
       body: JSON.stringify(s),
       headers: { "Content-Type": "application/json" },
@@ -110,7 +106,7 @@ export async function save_recipe(recipe: RecipeData, token: string) {
   formData.append("token", token);
 
   let response = await (
-    await fetch(api_base + "/admin/recipes/add", {
+    await fetch("/api/admin/recipes/add", {
       method: "POST",
       body: formData,
     })
@@ -120,7 +116,7 @@ export async function save_recipe(recipe: RecipeData, token: string) {
 }
 
 export async function get_all_tags(): Promise<string[]> {
-  let response = await (await fetch(api_base + "/api/v1/get_all_tags")).json();
+  let response = await (await fetch("/api/v1/get_all_tags")).json();
 
   checkAPIError(response);
 
@@ -128,9 +124,7 @@ export async function get_all_tags(): Promise<string[]> {
 }
 
 export async function get_all_categories(): Promise<string[]> {
-  let response = await (
-    await fetch(api_base + "/api/v1/get_all_categories")
-  ).json();
+  let response = await (await fetch("/api/v1/get_all_categories")).json();
 
   checkAPIError(response);
 
@@ -140,8 +134,7 @@ export async function get_all_categories(): Promise<string[]> {
 export async function gen_recipe(recipe: string, token: string): Promise<any> {
   let response = await (
     await fetch(
-      api_base +
-        "/admin/gen_recipe/" +
+      "/api/admin/gen_recipe/" +
         encodeURIComponent(recipe) +
         "?token=" +
         encodeURIComponent(token)
@@ -159,14 +152,11 @@ export async function delete_recipe(
 ): Promise<any> {
   const payload = JSON.stringify(ids);
 
-  let response = await await fetch(
-    api_base + `/admin/recipes/remove?token=${token}`,
-    {
-      method: "POST",
-      body: payload,
-      headers: { "Content-Type": "application/json" },
-    }
-  );
+  let response = await await fetch(`/api/admin/recipes/remove?token=${token}`, {
+    method: "POST",
+    body: payload,
+    headers: { "Content-Type": "application/json" },
+  });
 
   checkAPIError(response);
 }

@@ -1,5 +1,3 @@
-RECIPES_BACKEND_IMAGE_API_URL="/static/image_api/{fname}"
-
 # Database configuration
 # RECIPES_BACKEND_DB_TYPE=mysql
 # RECIPES_BACKEND_DB_HOST=localhost

@@ -18,7 +18,9 @@ const nextConfig: NextConfig = {
 
   async rewrites() {
     return [
-      { source: "/static/image_api/:path*", destination: ( process.env.API_BASE || "http://localhost:9422/" ) + "/static/image/:path*"  ,}
+      { source: "/api/:path*", destination: process.env.NODE_ENV === 'development'
+        ? 'http://127.0.0.1:9422/api/:path*'
+        : '/api/' ,}
     ]
   }
 };

@@ -23,9 +23,7 @@ public_directory = os.getenv("RECIPES_BACKEND_STORAGE_DIRECTORY")
 public_directory = Path(public_directory)
 public_directory.mkdir(exist_ok=True)
 public_directory = str(public_directory.resolve())
-image_api_url = os.getenv(
-    "RECIPES_BACKEND_IMAGE_API_URL", "http://localhost:9422/api/v1/image/{fname}"
-)
+image_api_url = "/api/v1/image/{fname}"
 admin_password = os.getenv("RECIPES_BACKEND_PASSWORD")
 storage_type = os.getenv("RECIPES_BACKEND_STORAGE_PROVIDER", "local")
 
@@ -84,7 +82,7 @@ def get_recipe(id):
     return jsonify(resp.as_recipe_data(IMAGE_API_TEMPLATE))
 
 
-@app.route("/static/image/<fname>")
+@app.route("/api/v1/image/<fname>")
 def get_images(fname):
     if storage_type == "local":
         return send_from_directory(public_directory, fname)
@@ -188,7 +186,7 @@ def needs_token(fn):
     return token_wrapper
 
 
-@app.route("/admin/recipes/add", methods=["POST"])
+@app.route("/api/admin/recipes/add", methods=["POST"])
 @needs_token
 def add_recipe():
     cache.clear()
@@ -208,7 +206,7 @@ def add_recipe():
     return jsonify({"id": i})
 
 
-@app.route("/admin/recipes/remove", methods=["POST"])
+@app.route("/api/admin/recipes/remove", methods=["POST"])
 @needs_token
 def remove_recipe():
     cache.clear()
@@ -234,7 +232,7 @@ def remove_recipe():
     return jsonify({"status": "OKAY"})
 
 
-@app.route("/admin/auth", methods=["POST"])
+@app.route("/api/admin/auth", methods=["POST"])
 def get_token():
     if request.form["password"] == admin_password:
         tokens.append(token := secrets.token_urlsafe(32))
@@ -243,14 +241,14 @@ def get_token():
         raise ValueError("Authentication Error")
 
 
-@app.route("/admin/gen_recipe/<recipe>")
+@app.route("/api/admin/gen_recipe/<recipe>")
 @needs_token
 @functools.lru_cache(maxsize=1000)
 def gen_recipe(recipe):
     return jsonify(recipes_ai.process_data(recipes_ai.get_recipe(recipe)))
 
 
-@app.route("/admin/token_check", methods=["POST", "GET"])
+@app.route("/api/admin/token_check", methods=["POST", "GET"])
 def check_token():
     if request.values["token"] in tokens:
         return jsonify({"status": "OKAY"})

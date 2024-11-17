@@ -3,13 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "flask-dev": "cd ../../backend && pip3 install poetry && poetry install && poetry run python -m recipes_backend_server",
+    "flask-dev": "poetry run python -m recipes_backend_server",
     "next-dev": "next dev",
-    "dev": "npx concurrently \"pnpm run next-dev\" \"pnpm run flask-dev\"",
+    "dev": "concurrently \"pnpm run next-dev\" \"pnpm run flask-dev\"",
     "build": "next build",
-    "next-start": "next start",
-    "flask-start": "cd ../../backend && pip3 install poetry && poetry install && poetry run waitress-serve --host localhost --port 9422 \"recipes_backend_server:app\"",
-    "start": "npx concurrently \"pnpm run next-start\" \"pnpm run flask-start\"",
+    "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
