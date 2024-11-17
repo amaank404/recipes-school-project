@@ -19,13 +19,15 @@ import vercel_blob
 from . import db, recipes_ai
 from .dtypes import *
 
+storage_type = os.getenv("RECIPES_BACKEND_STORAGE_PROVIDER", "local")
+public_directory_raw = os.getenv("RECIPES_BACKEND_STORAGE_DIRECTORY")
 public_directory = os.getenv("RECIPES_BACKEND_STORAGE_DIRECTORY")
 public_directory = Path(public_directory)
-public_directory.mkdir(exist_ok=True)
+if storage_type == "local":
+    public_directory.mkdir(exist_ok=True)
 public_directory = str(public_directory.resolve())
 image_api_url = "/api/v1/image/{fname}"
 admin_password = os.getenv("RECIPES_BACKEND_PASSWORD")
-storage_type = os.getenv("RECIPES_BACKEND_STORAGE_PROVIDER", "local")
 
 app = Flask(__name__)
 CORS(app, resources={"/api/*": {"origins": "*"}, "/admin/*": {"origins": "*"}})
@@ -121,7 +123,7 @@ def ping():
 
 tokens = []
 
-public_directory_path = Path(public_directory)
+public_directory_path = Path(public_directory_raw)
 
 
 def get_fname(imdata: bytes):
