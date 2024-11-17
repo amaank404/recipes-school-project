@@ -16,6 +16,8 @@ flask-cors = "^5.0.0"
 pymysql-pool = "^0.4.6"
 pillow = "^11.0.0"
 waitress = "^3.0.1"
+flask-caching = "^2.3.0"
+vercel-blob = "^0.3.0"
 
 
 [build-system]

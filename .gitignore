@@ -297,3 +297,5 @@ dist
 *.Identifier
 
 public_data/
+
+.env.private*
