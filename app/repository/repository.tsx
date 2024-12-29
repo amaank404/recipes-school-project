@@ -11,7 +11,7 @@ import {
   SearchParams,
 } from "./types";
 
-let api_base: string = process.env.API_BASE || "http://localhost:9422/";
+let api_base: string = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:9422/";
 
 export async function auth(
   password: string,

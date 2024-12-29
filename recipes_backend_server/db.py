@@ -133,7 +133,7 @@ CREATE TABLE IF NOT EXISTS metadata (
                 )
             conn.commit()
 
-    def add_recipe(self, recipe: Recipe) -> int:
+    def add_recipe(self, recipe: Recipe) -> None:
         """
         does not take recipe.id into account, id is auto generated and returned
         """
@@ -254,6 +254,8 @@ CREATE TABLE IF NOT EXISTS metadata (
                     (page_limit, page_limit * page),
                 )
                 data = cur.fetchall()
+        else:
+            raise TypeError("No such category type")
         conn.close()
         d = []
 
@@ -272,7 +274,6 @@ CREATE TABLE IF NOT EXISTS metadata (
         return d
 
     def get_tags(self, id) -> list[str]:
-
         with self.connpool.get_connection() as conn:
             with conn.cursor() as cur:
                 cur.execute("SELECT tag FROM tags WHERE id=%s", (id,))
@@ -290,7 +291,7 @@ CREATE TABLE IF NOT EXISTS metadata (
                 cur.execute("SELECT DISTINCT base FROM recipes ORDER BY base")
                 return [x[0] for x in cur.fetchall()]
 
-    def search(self, query: list[str, str], page_limit: int = 10, page: int = 0):
+    def search(self, query: list[tuple[str, ...]], page_limit: int = 10, page: int = 0):
         q = SearchQuery()
 
         for x, *params in query:

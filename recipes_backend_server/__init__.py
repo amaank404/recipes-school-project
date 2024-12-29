@@ -4,8 +4,8 @@ import json
 import os
 import secrets
 import traceback
-from pathlib import Path
 from io import BytesIO
+from pathlib import Path
 
 from dotenv import load_dotenv
 from flask import Flask, Response, jsonify, redirect, request, send_from_directory
@@ -15,13 +15,15 @@ from PIL import Image
 
 load_dotenv()
 
-import vercel_blob
-from . import db, recipes_ai
-from .dtypes import *
+import vercel_blob  # noqa: E402
+
+from . import db, recipes_ai  # noqa: E402
+from .dtypes import Recipe  # noqa: E402
 
 storage_type = os.getenv("RECIPES_BACKEND_STORAGE_PROVIDER", "local")
-public_directory_raw = os.getenv("RECIPES_BACKEND_STORAGE_DIRECTORY")
-public_directory = os.getenv("RECIPES_BACKEND_STORAGE_DIRECTORY")
+public_directory_raw = os.getenv("RECIPES_BACKEND_STORAGE_DIRECTORY", "storage")
+public_directory = os.getenv("RECIPES_BACKEND_STORAGE_DIRECTORY", "storage")
+
 public_directory = Path(public_directory)
 if storage_type == "local":
     public_directory.mkdir(exist_ok=True)
@@ -53,7 +55,7 @@ def handle_exception(e):
 
     try:
         response = e.get_response()
-    except:
+    except:  # noqa: E722
         response = Response(status=500)
 
     # replace the body with JSON
@@ -85,16 +87,20 @@ def get_recipe(id):
 
 
 @app.route("/api/v1/image/<fname>")
-def get_images(fname):
+def get_images(fname: str):
     if storage_type == "local":
         return send_from_directory(public_directory, fname)
     elif storage_type == "vercel":
         return redirect(vercel_blob.head(f"{public_directory}/{fname}")["downloadUrl"])
+    else:
+        return Response(status=500)
 
 
 @app.route("/api/v1/recipes/search", methods=["POST"])
 def search_recipes():
-    limit = request.args.get("limit", 50)
+    assert request.json is not None
+
+    limit = int(request.args.get("limit", 50))
     if limit > 100:
         raise ValueError("Limit can not be greater than 100")
     page = int(request.args.get("page", 0))
@@ -212,6 +218,7 @@ def add_recipe():
 @needs_token
 def remove_recipe():
     cache.clear()
+    assert request.json is not None
     recipe_data = request.json
 
     file_removals = []
@@ -229,7 +236,7 @@ def remove_recipe():
         if storage_type == "local":
             x.unlink()
         elif storage_type == "vercel":
-            vercel_blob.delete(str(p).replace("\\", "/"))
+            vercel_blob.delete(str(x).replace("\\", "/"))
 
     return jsonify({"status": "OKAY"})
 

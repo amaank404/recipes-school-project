@@ -48,9 +48,9 @@ def _checkcol(s: str) -> bool:
 
 class SearchQuery:
     def __init__(self):
-        self._table: str = None
+        self._table: str | None = None
         self._columns: list[str] = []
-        self._joins: list[tuple[str, str, str, str]] = []
+        self._joins: list[tuple[tuple[str, str, str, str], str]] = []
         self._search: list[tuple[str, str]] = []
         self._between: list[tuple[str, int | float, int | float]] = []
         self._ops: list[tuple[str, int | float, str]] = []
@@ -76,7 +76,7 @@ class SearchQuery:
         self._joins.append(((table, from_col, to_col, to_col_table), join_type))
         return self
 
-    def columns(self, *columns: list[str]) -> Self:
+    def columns(self, *columns: str) -> Self:
         self._columns.extend(columns)
         return self
 
@@ -154,6 +154,7 @@ class SearchQuery:
         cols = ", ".join(map(self._prepend_col, self._columns))
         cols = "*" if len(cols) == 0 else cols
 
+        assert self._table is not None, "from table can not be None"
         query.append(f"{cols}")
         query.append("FROM")
         query.append(self._table)
