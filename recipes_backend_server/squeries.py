@@ -50,7 +50,7 @@ class SearchQuery:
     def __init__(self):
         self._table: str | None = None
         self._columns: list[str] = []
-        self._joins: list[tuple[tuple[str, str, str, str], str]] = []
+        self._joins: list[tuple[tuple[str, str, str, str | None], str]] = []
         self._search: list[tuple[str, str]] = []
         self._between: list[tuple[str, int | float, int | float]] = []
         self._ops: list[tuple[str, int | float, str]] = []
@@ -70,7 +70,7 @@ class SearchQuery:
         table: str,
         from_col: str,
         to_col: str,
-        to_col_table=None,
+        to_col_table: str | None = None,
         join_type: str = "INNER",
     ) -> Self:
         self._joins.append(((table, from_col, to_col, to_col_table), join_type))
@@ -84,7 +84,7 @@ class SearchQuery:
         self._search.append((column, query))
         return self
 
-    def order_by(self, column: str, order: str = None) -> Self:
+    def order_by(self, column: str, order: str | None = None) -> Self:
         if order is None:
             order = "ASC"
         assert order.upper() in ["ASC", "DESC"]
@@ -162,7 +162,7 @@ class SearchQuery:
         for x, join_type in self._joins:
             if x[-1] is None:
                 x = x[:-1] + (self._table,)
-            assert all(map(_checkcol, x))
+            assert all(map(_checkcol, x))  # pyright: ignore
             assert join_type.upper() in ("INNER", "LEFT", "RIGHT", "NATURAL")
             query.append(
                 "{join_type} JOIN {table} ON {table}.{from_col} = {target}.{to_col}".format(
@@ -206,7 +206,7 @@ class SearchQuery:
                 assert isinstance(x, (int, float, str))
             col = self._prepend_col(col)
             query.append(f"({col} IN ({', '.join(map(_escape, p))}))")
-            query.append(f"AND")
+            query.append("AND")
 
         query.pop()
 

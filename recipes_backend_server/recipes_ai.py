@@ -1,6 +1,7 @@
 import requests
 import json
 import os
+import logging
 
 ARLIAI_API_KEY = os.getenv("ARLIAI_API_KEY")
 
@@ -54,7 +55,7 @@ def get_recipe(recipe: str):
 
     payload = json.dumps(
         {
-            "model": "Meta-Llama-3.1-8B-Instruct",
+            "model": "Mistral-Nemo-12B-Instruct-2407",
             "messages": [
                 {
                     "role": "system",
@@ -93,6 +94,10 @@ def get_recipe(recipe: str):
         except:
             print(line)
             raise
+        if "object" not in d:
+            logging.warning(f"Object not in returned event object {d}")
+            continue
+            continue
         if d["object"] == "chat.completion.chunk":
             delta = d["choices"][0]["delta"]
             if "content" in delta:

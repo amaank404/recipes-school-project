@@ -340,3 +340,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+convert_to_html.py
+

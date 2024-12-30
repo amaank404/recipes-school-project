@@ -18,6 +18,7 @@ pillow = "^11.0.0"
 waitress = "^3.0.1"
 flask-caching = "^2.3.0"
 vercel-blob = "^0.3.0"
+gitpython = "^3.1.43"
 
 
 [build-system]
