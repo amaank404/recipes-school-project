@@ -16,7 +16,7 @@
     "concurrently": "^9.1.0",
     "dotenv": "^16.4.5",
     "lodash": "^4.17.21",
-    "next": "15.0.2",
+    "next": "15.2.3",
     "react": "19.0.0-rc-02c0e824-20241028",
     "react-dom": "19.0.0-rc-02c0e824-20241028",
     "react-markdown": "^9.0.1"
