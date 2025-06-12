@@ -10,15 +10,15 @@ Frontend written in Next.js/TailwindCSS
 # Install
 
 ```sh
-cd ./frontend/recipescom
 pnpm install
-
-cd ../../backend # or cd ./backend if you are at project root
 
 # Ubuntu
 # sudo apt-get install python3-poetry
 
 # Windows
+# python -m pip install poetry
+
+# Mac
 # python -m pip install poetry
 
 poetry install
@@ -62,19 +62,9 @@ API Base should point to the backend server instance from a client POV without t
 
 # Development Run
 
-In two terminal windows, run the following commands, one in each
-
-_term 1_
+In a terminal window:
 
 ```sh
-cd ./backend
-poetry run python -m recipes_backend_server
-```
-
-_term2_
-
-```sh
-cd ./frontend/recipescom
 pnpm dev
 ```
 
@@ -83,7 +73,6 @@ pnpm dev
 ## Building the frontend
 
 ```sh
-cd ./frontend/recipescom
 pnpm build
 ```
 
@@ -92,14 +81,12 @@ pnpm build
 _term1_
 
 ```sh
-cd ./frontend/recipescom
 npx next start  # or other production servers for next js
 ```
 
 _term2_
 
 ```sh
-cd ./backend
 poetry run waitress-serve --host localhost --port 9422 "recipes_backend_server:app"
 # or other production servers for Flask, 9422 is the recommended port, change localhost to
 # the host you wish to run the service on. It is recommended to form a reverse proxy setup.
